@@ -1,3 +1,4 @@
+import Scala.test;
 import UI.App;
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -12,6 +13,8 @@ public class Program extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+        test t = new test();
+        t.sayHello();
         new App();
     }
 }
