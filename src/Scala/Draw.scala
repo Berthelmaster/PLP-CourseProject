@@ -33,18 +33,42 @@ class Draw {
 
   def DrawFromString(head: String, tail: Array[String]): Array[String] = head match {
     case "LINE" => DrawLine(tail)
-    case "RECTANGLE" => Rectangle()
-    case "CIRCLE" => Circle()
-    case "TEXT"
+    case "RECTANGLE" => DrawRectangle(tail)
+    case "CIRCLE" => DrawCircle(tail)
+    case "TEXT-AT" => DrawText(tail)
+    case "BOUNDING-BOX" => DrawBounding(tail)
+    case "DRAW" => DrawObject(tail)
+    case "FILL" => DrawFill(tail)
     case _ => Nil
+  }
+
+  def DrawLine(arr: Array[String]): Unit = {
 
   }
 
-  def DrawLine(arr: Array[String]): Array[String] ={
+  def DrawRectangle(arr: Array[String]): Unit = {
 
   }
 
-  def
+  def DrawCircle(arr: Array[String]): Unit = {
+
+  }
+
+  def DrawText(arr: Array[String]): Unit = {
+
+  }
+
+  def DrawBounding(arr: Array[String]): Unit = {
+
+  }
+
+  def DrawObject(arr: Array[String]): Unit = {
+
+  }
+
+  def DrawFill(arr: Array[String]): Unit = {
+
+  }
 
 
   def DrawLines(shape: DrawShapes): Unit ={
