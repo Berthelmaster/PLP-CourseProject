@@ -1,7 +1,7 @@
 package UI;
 
 import javax.swing.*;
-import java.awt.*;
+import javax.swing.border.EmptyBorder;
 
 public class App extends JFrame{
     private JPanel panelMain;
@@ -18,25 +18,15 @@ public class App extends JFrame{
     private JTextArea logArea;
 
     public App() {
-        JPanel panel = new JPanel() {
-            @Override
-            protected void paintComponent(Graphics g) {
-                super.paintComponent(g);
-                Graphics2D g2d = (Graphics2D) g;
-
-                g2d.setColor(Color.BLACK);
-                g2d.drawRect(10, 15, 90, 60);
-            }
-        };
-
-        panel.setBackground(Color.WHITE);
-        shapeDisplayPanel.add(panel);
+        panelMain.setBorder(new EmptyBorder(4,4,4,4));
+        shapeDisplayPanel.add(new Canvas(-1,10,-1,10));
         this.setContentPane((this.panelMain));
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.pack();
         this.setVisible(true);
     }
 
-    public void drawShape() {
+    public void drawPixel(){
+        //do some shit
     }
 }
