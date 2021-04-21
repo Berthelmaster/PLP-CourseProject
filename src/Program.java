@@ -3,8 +3,6 @@ import UI.App;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
-import static javafx.application.Application.launch;
-
 public class Program extends Application {
 
     public static void main(String[] args){
@@ -12,7 +10,7 @@ public class Program extends Application {
     }
 
     @Override
-    public void start(Stage primaryStage) throws Exception {
+    public void start(Stage primaryStage) {
         test t = new test();
         t.sayHello();
         new App();
