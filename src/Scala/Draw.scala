@@ -15,12 +15,14 @@ class Draw {
 
 
   def DrawShape(input: String): Array[String] = {
-    val filter = FilterInput(input)
+    val arguments = FilterInput(input)
+    val head = arguments.head
+    val tail = arguments.tail
 
     // START ALL ELSE GOES HERE
 
     // Figure out what class to call
-    findClassType(filter)
+    DrawFromString(head, tail)
 
 
 
@@ -29,10 +31,20 @@ class Draw {
     new Array[String]('2')
   }
 
-  def findClassType(arr: Array[String]): Unit = arr(0) match {
-    case "LINE" => Line()
+  def DrawFromString(head: String, tail: Array[String]): Array[String] = head match {
+    case "LINE" => DrawLine(tail)
     case "RECTANGLE" => Rectangle()
+    case "CIRCLE" => Circle()
+    case "TEXT"
+    case _ => Nil
+
   }
+
+  def DrawLine(arr: Array[String]): Array[String] ={
+
+  }
+
+  def
 
 
   def DrawLines(shape: DrawShapes): Unit ={
