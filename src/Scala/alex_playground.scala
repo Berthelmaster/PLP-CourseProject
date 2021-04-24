@@ -28,10 +28,11 @@ class alex_playground {
   // hver enkelt metode/algoritme der tegner, vil da tilføje pixels til drawnOutput
   def DrawFromString(head: String, tail: Array[String], output: Array[Array[String]]): Unit = head match {
     case "LINE" => DrawLine(tail, output)
-    case _ => println("String completed"); output.foreach(arr => arr.foreach(str => println(str + " ")));
+    case "RECTANGLE" => DrawRectangle(tail, output)
+    case _ => println("String completed"); output.foreach(arr => arr.foreach(str => println(str + " "))); return output;
   }
 
-  def DrawLine(input: Array[String], output: Array[Array[String]]) = Array {
+  def DrawLine(input: Array[String], output: Array[Array[String]]): Array[Array[String]] = {
     println("LINE MATCHED")
     val x0 = input.head;
     val y0 = input.tail.head;
@@ -51,7 +52,7 @@ class alex_playground {
     val lineStart = Array(colour);
     val line = BresenhamsAlgorithm(x0.toInt, y0.toInt, x1.toInt, y1.toInt, m, slopeError, lineStart);
 
-    DrawFromString(nextCommand.head, nextCommand.tail, output:+ line);
+    return DrawFromString(nextCommand.head, nextCommand.tail, output:+ line);
   }
 
   // pixel output:
@@ -88,7 +89,9 @@ class alex_playground {
       println("Brensenham END");
       return outputNew;
     }
+  }
 
+  def DrawRectangle(tail: Array[String], output: Array[Array[String]]): Array[Array[String]] = {
 
   }
 
