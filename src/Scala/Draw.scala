@@ -15,12 +15,14 @@ class Draw {
 
 
   def DrawShape(input: String): Array[String] = {
-    val filter = FilterInput(input)
+    val arguments = FilterInput(input)
+    val head = arguments.head
+    val tail = arguments.tail
 
     // START ALL ELSE GOES HERE
 
     // Figure out what class to call
-    findClassType(filter)
+    DrawFromString(head, tail, null)
 
 
 
@@ -29,13 +31,42 @@ class Draw {
     new Array[String]('2')
   }
 
-  def findClassType(arr: Array[String]): Unit = arr(0) match {
-    case "LINE" => Line()
-    case "RECTANGLE" => Rectangle()
+  def DrawFromString(head: String, tail: Array[String], output: Array[String]): Array[String] = head match {
+    case "LINE" => DrawLine(tail, output)
+    case "RECTANGLE" => DrawRectangle(tail, output)
+    case "CIRCLE" => DrawCircle(tail, output)
+    case "TEXT-AT" => DrawText(tail, output)
+    case "BOUNDING-BOX" => DrawBounding(tail, output)
+    case "DRAW" => DrawObject(tail, output)
+    case "FILL" => DrawFill(tail, output)
+    case _ => output
   }
 
+  def DrawLine(arr: Array[String], output: Array[String]): Array[String] = {
 
-  def DrawLines(shape: DrawShapes): Unit ={
+  }
+
+  def DrawRectangle(arr: Array[String], output: Array[String]): Array[String] = {
+
+  }
+
+  def DrawCircle(arr: Array[String], output: Array[String]): Array[String] = {
+
+  }
+
+  def DrawText(arr: Array[String], output: Array[String]): Array[String] = {
+
+  }
+
+  def DrawBounding(arr: Array[String], output: Array[String]): Array[String] = {
+
+  }
+
+  def DrawObject(arr: Array[String], output: Array[String]): Array[String] = {
+
+  }
+
+  def DrawFill(arr: Array[String], output: Array[String]): Array[String] = {
 
   }
 
