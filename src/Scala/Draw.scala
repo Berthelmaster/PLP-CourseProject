@@ -14,7 +14,7 @@ class Draw {
   val testInputLine = "(LINE (2 1) (3 4))"
 
 
-  def DrawShape(input: String): Array[String] = {
+  def DrawShape(input: String): Array[Array[String]] = {
     val arguments = FilterInput(testInputLine)
     val head = arguments.head
     val tail = arguments.tail
@@ -22,13 +22,12 @@ class Draw {
     // START ALL ELSE GOES HERE
 
     // Figure out what class to call
-    DrawFromString(head, tail, null)
-
-
+    val outputArrayOfStringArrays = Array.empty[Array[String]];
+    return DrawFromString(head, tail, outputArrayOfStringArrays)
 
     // STOP
 
-    new Array[String]('2')
+    //new Array[String]('2')
   }
 
   def DrawFromString(head: String, tail: Array[String], output: Array[Array[String]]): Array[Array[String]] = head match {
