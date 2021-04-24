@@ -15,7 +15,7 @@ class Draw {
 
 
   def DrawShape(input: String): Array[String] = {
-    val arguments = FilterInput(input)
+    val arguments = FilterInput(testInputLine)
     val head = arguments.head
     val tail = arguments.tail
 
@@ -31,7 +31,7 @@ class Draw {
     new Array[String]('2')
   }
 
-  def DrawFromString(head: String, tail: Array[String], output: Array[String]): Array[String] = head match {
+  def DrawFromString(head: String, tail: Array[String], output: Array[Array[String]]): Array[Array[String]] = head match {
     case "LINE" => DrawLine(tail, output)
     case "RECTANGLE" => DrawRectangle(tail, output)
     case "CIRCLE" => DrawCircle(tail, output)
@@ -42,32 +42,36 @@ class Draw {
     case _ => output
   }
 
-  def DrawLine(arr: Array[String], output: Array[String]): Array[String] = {
+  private def DrawLine(arr: Array[String], output: Array[Array[String]]): Array[Array[String]] = {
+    arr.foreach(println)
 
+
+
+    output
   }
 
-  def DrawRectangle(arr: Array[String], output: Array[String]): Array[String] = {
-
+  private def DrawRectangle(arr: Array[String], output: Array[Array[String]]): Array[Array[String]] = {
+    return output
   }
 
-  def DrawCircle(arr: Array[String], output: Array[String]): Array[String] = {
-
+  private def DrawCircle(arr: Array[String], output: Array[Array[String]]): Array[Array[String]] = {
+    return output
   }
 
-  def DrawText(arr: Array[String], output: Array[String]): Array[String] = {
-
+  private def DrawText(arr: Array[String], output: Array[Array[String]]): Array[Array[String]] = {
+    return output
   }
 
-  def DrawBounding(arr: Array[String], output: Array[String]): Array[String] = {
-
+  private def DrawBounding(arr: Array[String], output: Array[Array[String]]): Array[Array[String]] = {
+    return output
   }
 
-  def DrawObject(arr: Array[String], output: Array[String]): Array[String] = {
-
+  private def DrawObject(arr: Array[String], output: Array[Array[String]]): Array[Array[String]] = {
+    return output
   }
 
-  def DrawFill(arr: Array[String], output: Array[String]): Array[String] = {
-
+  private def DrawFill(arr: Array[String], output: Array[Array[String]]): Array[Array[String]] = {
+    return output
   }
 
   def FilterInput(input: String): Array[String] = {
