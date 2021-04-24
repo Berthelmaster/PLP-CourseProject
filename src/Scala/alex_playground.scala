@@ -39,7 +39,32 @@ class alex_playground {
     println("x1: " + x1);
     println("y1: " + y1);
 
+    //Bresenham recursively
+    val m = 2 * (y1.toInt - y0.toInt);
+    val slopeError = m - (x1.toInt - x0.toInt);
+    BresenhamsAlgorithm(x0.toInt, y0.toInt, x1.toInt, y1.toInt, m, slopeError);
+
     DrawFromString(nextCommand.head, nextCommand.tail)
+  }
+
+  def BresenhamsAlgorithm(x0: Int, y0: Int, x1: Int, y1: Int, m: Int, slopeError: Int): Unit = {
+    println("(" + x0 + ", " + y0 + ")");
+
+    if (x0 <= x1) {
+      var slopeErrorNew = slopeError + m;
+      if (slopeErrorNew >= 0) {// not >0 sharp greater than?
+        val y_new = y0 + 1;
+        // y0 = y0 + 1;
+        slopeErrorNew = slopeErrorNew - 2 * (x1 - x0);
+        BresenhamsAlgorithm(x0+1, y_new, x1, y1, m, slopeErrorNew);
+      } else {
+        BresenhamsAlgorithm(x0+1, y0, x1, y1, m, slopeErrorNew);
+      }
+    } else {
+      println("Brensenham END");
+    }
+
+
   }
 
 }
