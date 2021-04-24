@@ -42,31 +42,31 @@ class Draw {
     case _ => output
   }
 
-  def DrawLine(arr: Array[String], output: Array[String]): Unit = {
+  def DrawLine(arr: Array[String], output: Array[String]): Array[String] = {
 
   }
 
-  def DrawRectangle(arr: Array[String], output: Array[String]): Unit = {
+  def DrawRectangle(arr: Array[String], output: Array[String]): Array[String] = {
 
   }
 
-  def DrawCircle(arr: Array[String], output: Array[String]): Unit = {
+  def DrawCircle(arr: Array[String], output: Array[String]): Array[String] = {
 
   }
 
-  def DrawText(arr: Array[String], output: Array[String]): Unit = {
+  def DrawText(arr: Array[String], output: Array[String]): Array[String] = {
 
   }
 
-  def DrawBounding(arr: Array[String], output: Array[String]): Unit = {
+  def DrawBounding(arr: Array[String], output: Array[String]): Array[String] = {
 
   }
 
-  def DrawObject(arr: Array[String], output: Array[String]): Unit = {
+  def DrawObject(arr: Array[String], output: Array[String]): Array[String] = {
 
   }
 
-  def DrawFill(arr: Array[String], output: Array[String]): Unit = {
+  def DrawFill(arr: Array[String], output: Array[String]): Array[String] = {
 
   }
 
