@@ -42,12 +42,41 @@ class Draw {
     case _ => output
   }
 
-  private def DrawLine(arr: Array[String], output: Array[Array[String]]): Array[Array[String]] = {
-    arr.foreach(println)
+  def DrawLine(input: Array[String], output: Array[Array[String]]): Array[Array[String]] = {
+    println("LINE MATCHED")
+    val x0 = input.head;
+    val y0 = input.tail.head;
+    val x1 = input.tail.tail.head;
+    val y1 = input.tail.tail.tail.head;
+    val nextCommand = input.tail.tail.tail.tail;
 
+    //Bresenham recursively
+    val m = 2 * (y1.toInt - y0.toInt);
+    val slopeError = m - (x1.toInt - x0.toInt);
+    val colour = "black"; // get from params
+    val lineStart = Array(colour);
+    val line = BresenhamsAlgorithm(x0.toInt, y0.toInt, x1.toInt, y1.toInt, m, slopeError, lineStart);
 
+    return DrawFromString(nextCommand.head, nextCommand.tail, output:+ line);
+  }
 
-    output
+  def BresenhamsAlgorithm(x0: Int, y0: Int, x1: Int, y1: Int, m: Int, slopeError: Int, output: Array[String]): Array[String] = {
+    var outputNew = output;
+    outputNew = outputNew :+ x0.toString;
+    outputNew = outputNew :+ y0.toString;
+
+    if (x0 <= x1) {
+      var slopeErrorNew = slopeError + m;
+      if (slopeErrorNew >= 0) {
+        val y_new = y0 + 1;
+        slopeErrorNew = slopeErrorNew - 2 * (x1 - x0);
+        BresenhamsAlgorithm(x0+1, y_new, x1, y1, m, slopeErrorNew, outputNew);
+      } else {
+        BresenhamsAlgorithm(x0+1, y0, x1, y1, m, slopeErrorNew, outputNew);
+      }
+    } else {
+      return outputNew;
+    }
   }
 
   private def DrawRectangle(arr: Array[String], output: Array[Array[String]]): Array[Array[String]] = {
