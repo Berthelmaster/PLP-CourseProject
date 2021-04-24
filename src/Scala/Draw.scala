@@ -55,7 +55,46 @@ class Draw {
   }
 
   private def DrawCircle(arr: Array[String], output: Array[Array[String]]): Array[Array[String]] = {
-    return output
+    // Mid-Point Circle Drawing Algorithm - https://www.geeksforgeeks.org/mid-point-circle-drawing-algorithm
+    val r = arr.tail.tail.head.toInt
+    val x = r
+    val y = 0
+    val P = 1 - r
+
+
+    val out = MidPointCircleAlgorithm(x,y,r,P,Array.empty)
+
+    output :+ out
+
+    val buffer = arr.toBuffer
+    buffer.remove(0,2)
+    val newArr = buffer.toArray
+
+    val newHead = newArr.head
+
+    DrawFromString(newHead, newArr, output)
+  }
+
+  private def MidPointCircleAlgorithm(x: Int, y: Int, r: Int, P: Int, output: Array[String]) : Array[String] = {
+    val y_new = y + 1
+    var p_new = P
+    var x_new = x
+
+    if(p_new <= 0){
+      p_new = p_new+2*y+1
+    }
+    else{
+      x_new = x_new-1
+      p_new = P+2*y-2*x+1
+    }
+
+    output :+ p_new
+
+    if(x < y)
+      MidPointCircleAlgorithm(x_new, y_new, r, p_new, output)
+
+    if(x != y)
+      return output
   }
 
   private def DrawText(arr: Array[String], output: Array[Array[String]]): Array[Array[String]] = {
