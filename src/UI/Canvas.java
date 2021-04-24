@@ -81,15 +81,15 @@ public class Canvas extends JPanel {
         g.drawLine(0,y_zero, getWidth(), y_zero);
         g.drawLine(x_zero,0, x_zero, getHeight());
 
-        int nColumnCount = (getWidth() - x_zero) / gridSectionSize;
-        int currentX = x_zero + gridSectionSize;
+        int nColumnCount = getHeight() / gridSectionSize;
+        int currentX = gridSectionSize;
         for (int i = 0; i < nColumnCount; i++) {
             g.drawLine(currentX, y_zero + markingSize, currentX, y_zero - markingSize);
             currentX = currentX + gridSectionSize;
         }
 
-        int nRowCount = y_zero / gridSectionSize;
-        int currentY = y_zero - gridSectionSize;
+        int nRowCount = getWidth() / gridSectionSize;
+        int currentY = getWidth() - gridSectionSize;
         for (int i = 0; i < nRowCount; i++) {
             g.drawLine(x_zero + markingSize, currentY, x_zero - markingSize, currentY);
             currentY = currentY - gridSectionSize;
