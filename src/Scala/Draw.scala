@@ -12,10 +12,13 @@ class Draw {
 
 
   val testInputLine = "(LINE (2 1) (3 4))"
+  val endSign = "END"
 
 
   def DrawShape(input: String): Array[Array[String]] = {
-    val arguments = FilterInput(testInputLine)
+    val inputNew = input + " " + endSign;
+    val testInputLine = this.testInputLine + " " + endSign;
+    val arguments = FilterInput(testInputLine) //use inputNew here
     val head = arguments.head
     val tail = arguments.tail
 
