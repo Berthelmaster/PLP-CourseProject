@@ -19,6 +19,6 @@ public class Program extends Application {
         new App();
 
         alex_playground play = new alex_playground();
-        play.Draw("");
+        play.DrawShape("");
     }
 }
