@@ -26,7 +26,7 @@ class alex_playground {
 
   // alle metoderne skal nok have et output array, der bliver passed rundt
   // hver enkelt metode/algoritme der tegner, vil da tilføje pixels til drawnOutput
-  def DrawFromString(head: String, tail: Array[String], output: Array[Array[String]]): Unit = head match {
+  def DrawFromString(head: String, tail: Array[String], output: Array[Array[String]]): Array[Array[String]] = head match {
     case "LINE" => DrawLine(tail, output)
     case "RECTANGLE" => DrawRectangle(tail, output)
     case _ => println("String completed"); output.foreach(arr => arr.foreach(str => println(str + " "))); return output;
@@ -93,6 +93,8 @@ class alex_playground {
 
   def DrawRectangle(tail: Array[String], output: Array[Array[String]]): Array[Array[String]] = {
 
+    return output;
+    // noget smart der bruger DrawLine.. Måske noget matching som i DrawFromString?
   }
 
 }
