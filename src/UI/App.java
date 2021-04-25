@@ -1,5 +1,7 @@
 package UI;
 
+import Scala.Draw;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
@@ -21,6 +23,7 @@ public class App extends JFrame{
     private JLabel errorLabel;
     private JTextArea errorArea;
     private JTextArea logArea;
+    //private Draw scaleDrawingEngine = new Draw();
 
     public App() {
         errorArea.setForeground(Color.RED);
@@ -36,6 +39,7 @@ public class App extends JFrame{
         inputButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+               // scaleDrawingEngine.DrawShape(inputField.getText());
                 logArea.append(inputField.getText() + "\n");
                 inputField.setText("");
             }
