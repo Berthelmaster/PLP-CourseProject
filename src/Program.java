@@ -11,7 +11,7 @@ public class Program extends Application {
     }
 
     @Override
-    public void start(Stage primaryStage) {
+    public void start(Stage primaryStage) throws Exception {
         test t = new test();
         t.sayHello();
         new App();
