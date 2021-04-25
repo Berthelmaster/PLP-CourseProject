@@ -103,7 +103,7 @@ class Draw {
     DrawFromString(newHead, newArr, output)
   }
 
-  private def MidPointCircleAlgorithm(x: Int, y: Int, r: Int, P: Int, output: Array[String]) : Array[String] = {
+  private def MidPointCircleAlgorithm(x: Int, y: Int, r: Int, P: Int, output: Array[String]): Array[String] = {
     val y_new = y + 1
     var p_new = P
     var x_new = x
@@ -116,13 +116,14 @@ class Draw {
       p_new = P+2*y-2*x+1
     }
 
-    output :+ p_new
+    val outputNew = output :+ p_new.toString
 
-    if(x < y)
-      MidPointCircleAlgorithm(x_new, y_new, r, p_new, output)
-
-    if(x != y)
-      return output
+    if(x < y) {
+      return MidPointCircleAlgorithm(x_new, y_new, r, p_new, outputNew)
+    }
+    else { // if (x != y), otherwise there might be no return, resulting in return type being Unit
+      return outputNew
+    }
   }
 
   private def DrawText(arr: Array[String], output: Array[Array[String]]): Array[Array[String]] = {
