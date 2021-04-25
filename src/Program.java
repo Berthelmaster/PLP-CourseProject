@@ -1,3 +1,4 @@
+import Scala.alex_playground;
 import Scala.test;
 import UI.App;
 import javafx.application.Application;
@@ -14,5 +15,8 @@ public class Program extends Application {
         test t = new test();
         t.sayHello();
         new App();
+
+        alex_playground play = new alex_playground();
+        play.Draw("");
     }
 }
