@@ -11,9 +11,8 @@ class Draw {
   case class Fill() extends DrawShapes
 
 
-  val testInputLine = "(LINE (2 1) (3 4))"
+  val testInputLine = "(FILL RED (RECTANGLE (1 1) (3 3)))"
   val endSign = "END"
-
 
   def DrawShape(input: String): Array[Array[String]] = {
     val inputNew = input + " " + endSign;
@@ -24,6 +23,7 @@ class Draw {
 
     // START ALL ELSE GOES HERE
 
+    println("DrawShape")
     // Figure out what class to call
     val outputArrayOfStringArrays = Array.empty[Array[String]];
     return DrawFromString(head, tail, outputArrayOfStringArrays)
@@ -41,7 +41,7 @@ class Draw {
     case "BOUNDING-BOX" => DrawBounding(tail, output)
     case "DRAW" => DrawObject(tail, output)
     case "FILL" => DrawFill(tail, output)
-    case _ => output
+    case _ => println("String completed"); output.foreach(arr => arr.foreach(str => println(str + " "))); return output;
   }
 
   def DrawLine(input: Array[String], output: Array[Array[String]]): Array[Array[String]] = {
@@ -217,6 +217,9 @@ class Draw {
   }
 
   private def DrawBounding(arr: Array[String], output: Array[Array[String]]): Array[Array[String]] = {
+    // draw rectangle?
+
+    // set global bound box start pixel
     return output
   }
 
@@ -224,8 +227,48 @@ class Draw {
     return output
   }
 
-  private def DrawFill(arr: Array[String], output: Array[Array[String]]): Array[Array[String]] = {
+  private def DrawFill(input: Array[String], output: Array[Array[String]]): Array[Array[String]] = input.tail.head match {
+    //case "LINE" => DrawLine(tail, output)
+    case "RECTANGLE" => FillRectangle(input, output)
+    //case "CIRCLE" => DrawCircle(tail, output)
+    //case "TEXT-AT" => DrawText(tail, output)
+    case _ => output // error state
+
     return output
+  }
+
+  private def FillRectangle(input: Array[String], output: Array[Array[String]]): Array[Array[String]] = {
+    // input = ["Red", "RECTANGLE", "2", "1", "3","4"]
+    val colour = input.head;
+    val x1 = input.tail.tail.head.toInt;
+    val y1 = input.tail.tail.tail.head.toInt;
+    val x2 = input.tail.tail.tail.tail.head.toInt;
+    val y2 = input.tail.tail.tail.tail.tail.head.toInt;
+    val nextCommand = input.tail.tail.tail.tail.tail.tail;
+    println("x2: " + x2 + " y2: " + y2)
+    val shapeStart = Array(colour)
+
+    val shape = FillRectangleImpl(x1, x1, y1, x2, y2, shapeStart)
+
+    return DrawFromString(nextCommand.head, nextCommand.tail, output:+ shape) // only one shape is filled at a time
+  }
+
+  private def FillRectangleImpl(x1_origin: Int, x: Int, y: Int, x2: Int, y2: Int, output: Array[String]): Array[String] = {
+    var outputNew = output;
+    outputNew = outputNew :+ x.toString;
+    outputNew = outputNew :+ y.toString;
+    println("(" + x + ", " + y + ")");
+
+    if (x == x2 && y == y2) { // maybe??
+      println("Fill Rectangle END");
+      return outputNew;
+    } else {
+      if (x < x2) {
+        FillRectangleImpl(x1_origin, x+1, y, x2, y2, outputNew)
+      } else {
+        FillRectangleImpl(x1_origin, x1_origin, y+1, x2, y2, outputNew)
+      }
+    }
   }
 
   def FilterInput(input: String): Array[String] = {
