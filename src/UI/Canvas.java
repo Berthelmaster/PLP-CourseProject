@@ -17,7 +17,7 @@ public class Canvas extends JPanel {
     private int markingSize;
     private int y_zero;
     private int x_zero;
-    private ArrayList<Pixel> pixels;
+    private ArrayList<PixelCollection> pixels;
 
     Canvas(int x_begin, int x_end, int y_begin, int y_end) {
         this.x_size = (x_end-x_begin);
@@ -30,13 +30,8 @@ public class Canvas extends JPanel {
         setBackground(Color.WHITE);
     }
 
-    public void drawPixel(int x, int y){
-        pixels.add(new Pixel(x,(getHeight() - y)));
-        repaint();
-    }
-
-    public void drawPixels(ArrayList<Pixel> pixelList){
-        pixelList.forEach(pixel -> pixels.add(new Pixel(pixel.get_x(),(getHeight() - pixel.get_y()))));
+    public void drawPixels(ArrayList<PixelCollection> pixelCollectionList){
+        pixels.addAll(pixelCollectionList);
         repaint();
     }
 
@@ -56,7 +51,13 @@ public class Canvas extends JPanel {
     }
 
     private void renderPixels(Graphics g) {
-        pixels.forEach(pixel -> g.drawLine(pixel.get_x(), pixel.get_y(), pixel.get_x(), pixel.get_y()));
+        pixels.forEach(pixelCollection -> {
+            pixelCollection.getPixels().forEach(pixel -> {
+                g.setColor(Color.getColor(pixelCollection.getColor()));
+                g.drawLine(pixel.get_x(), getHeight()-pixel.get_y(), pixel.get_x(), getHeight()-pixel.get_y());
+            });
+        });
+        g.setColor(Color.BLACK);
     }
 
     private void renderGrid(Graphics g) {

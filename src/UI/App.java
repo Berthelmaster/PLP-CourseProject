@@ -40,31 +40,14 @@ public class App extends JFrame{
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    ArrayList<PixelCollection> drawings = calculateDrawing(inputField.getText());
-                    drawings.forEach(drawing -> drawPixels(drawing.getPixels()));
-                    //TODO: Det ovenstående samt alt supporterende kode dertil bør laves om til følgende...
-                    //Pt gemmes state af det tegnede hos den Jframe som holder tegningen, dette skal ændres inde i
-                    //klassen Canvas hvor drawComponent bør kalde scala koden for at få alle de elementer som skal tegnes
-                    //desuden skal scala jo i så fald gemme de elementer der skal tegnes.
-                    //Endvidere bår scala nok også ved program start få størelsen på det det brugte canvas for at kunne udregne pixels korrekt
-                    //til dette skal scala også kende størrelsen på akserne.
-                    //til sidst bør det eneste GUI gør være at kalde update/redraw på canvas som så henter alt den
-                    //skal gentegne fra scala koden.
+                    ArrayList<PixelCollection> pixels = calculateDrawing(inputField.getText());
+                    pixels.forEach(drawing -> canvas.drawPixels(pixels));
                 } catch (Exception exception) {
                     logError(exception.getMessage());
                 }
-
                 logInput();
             }
         });
-    }
-
-    public void drawPixel(int x, int y){
-        canvas.drawPixel(x,y);
-    }
-
-    public void drawPixels(ArrayList<Pixel> pixelList){
-        canvas.drawPixels(pixelList);
     }
 
     private ArrayList<PixelCollection> calculateDrawing(String string) {
