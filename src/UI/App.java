@@ -50,9 +50,9 @@ public class App extends JFrame{
         });
     }
 
-    private ArrayList<PixelCollection> calculateDrawing(String string) {
+    private ArrayList<PixelCollection> calculateDrawing(String input) {
         ArrayList<PixelCollection> drawings = new ArrayList<>();
-        String[][] drawingEngineOutput = scaleDrawingEngine.DrawShape("(LINE (2 1) (3 4))"); //todo: change to use input
+        String[][] drawingEngineOutput = scaleDrawingEngine.DrawShape( input.isEmpty() ? "(LINE (5 5) (10 10))" : input );
         for (String[] strings : drawingEngineOutput) {
             drawings.add(new PixelCollection(strings));
         }

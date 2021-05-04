@@ -18,7 +18,7 @@ class Draw {
   def DrawShape(input: String): Array[Array[String]] = {
     val inputNew = input + " " + endSign;
     val testInputLine = this.testInputLine + " " + endSign;
-    val arguments = FilterInput(testInputLine) //use inputNew here
+    val arguments = FilterInput(inputNew) //use inputNew here
     val head = arguments.head
     val tail = arguments.tail
 
