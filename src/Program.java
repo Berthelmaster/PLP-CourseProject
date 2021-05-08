@@ -1,3 +1,4 @@
+import Scala.Draw;
 import Scala.alex_playground;
 import Scala.test;
 import UI.App;
@@ -12,8 +13,8 @@ public class Program extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        test t = new test();
-        t.sayHello();
+        Draw t = new Draw();
+        t.DrawShape("");
         new App();
     }
 }
