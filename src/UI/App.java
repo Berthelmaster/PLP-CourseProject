@@ -27,7 +27,7 @@ public class App extends JFrame{
 
     public App() {
         errorArea.setForeground(Color.RED);
-        canvas = new Canvas(-10,50,-10,50);
+        canvas = new Canvas(-5,85,-5,55);
 
         panelMain.setBorder(new EmptyBorder(4,8,4,8));
         shapeDisplayPanel.add(canvas);

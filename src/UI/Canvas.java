@@ -35,11 +35,16 @@ public class Canvas extends JPanel {
         repaint();
     }
 
+    public void drawText(ArrayList<PixelCollection> pixelCollectionList){
+        pixels.addAll(pixelCollectionList);
+        repaint();
+    }
+
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        this.gridSectionSize = Math.min((getHeight() / this.x_size), (getWidth() / y_size));
+        this.gridSectionSize = Math.min((getWidth() / this.x_size), (getHeight() / y_size));
         if(gridSectionSize == 0) gridSectionSize = 10;
         markingSize = gridSectionSize / 5;
         y_zero = getHeight() - (abs(y_begin) * gridSectionSize);
@@ -54,7 +59,11 @@ public class Canvas extends JPanel {
         pixels.forEach(pixelCollection -> {
             g.setColor(Color.getColor(pixelCollection.getColor()));
             pixelCollection.getPixels().forEach(pixel -> {
-                g.drawLine(pixel.get_x(), getHeight()-pixel.get_y(), pixel.get_x(), getHeight()-pixel.get_y());
+                if (pixel.getClass() == TextPixel.class) {
+                    g.drawString(((TextPixel) pixel).getText(), pixel.get_x(), getHeight()-pixel.get_y());
+                } else {
+                    g.drawLine(pixel.get_x(), getHeight()-pixel.get_y(), pixel.get_x(), getHeight()-pixel.get_y());
+                }
             });
         });
         g.setColor(Color.BLACK);
@@ -82,18 +91,22 @@ public class Canvas extends JPanel {
         g.drawLine(0,y_zero, getWidth(), y_zero);
         g.drawLine(x_zero,0, x_zero, getHeight());
 
-        int nColumnCount = getHeight() / gridSectionSize;
+        int nColumnCount = getWidth() / gridSectionSize;
         int currentX = gridSectionSize;
         for (int i = 0; i < nColumnCount; i++) {
             g.drawLine(currentX, y_zero + markingSize, currentX, y_zero - markingSize);
             currentX = currentX + gridSectionSize;
         }
 
-        int nRowCount = getWidth() / gridSectionSize;
-        int currentY = getWidth() - gridSectionSize;
+        int nRowCount = getHeight() / gridSectionSize;
+        int currentY = getHeight() - gridSectionSize;
         for (int i = 0; i < nRowCount; i++) {
             g.drawLine(x_zero + markingSize, currentY, x_zero - markingSize, currentY);
             currentY = currentY - gridSectionSize;
         }
+    }
+
+    void renderText(Graphics g) {
+        g.drawString("test", x_zero+1, y_zero-1);
     }
 }

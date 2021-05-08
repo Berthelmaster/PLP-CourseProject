@@ -12,6 +12,7 @@ class Draw {
 
 
   val testInputLine = "(FILL RED (RECTANGLE (1 1) (3 3)))"
+  //(LINE (10 10) (90 90)) (TEXT-AT (90 90) lollern test af tekst funktionens integritet)
   val endSign = "END"
 
   def DrawShape(input: String): Array[Array[String]] = {
@@ -212,8 +213,29 @@ class Draw {
     }
   }
 
-  private def DrawText(arr: Array[String], output: Array[Array[String]]): Array[Array[String]] = {
-    return output
+  private def DrawText(input: Array[String], output: Array[Array[String]]): Array[Array[String]] = {
+    // input = ["2", "1", "test","tekst","woop","END"]
+    val x = input.head;
+    val y = input.tail.head;
+
+    val textBeginning = Array(x, y, input.tail.tail.head);
+    val textAndNext = DrawTextImpl(input.tail.tail.tail, textBeginning);
+    val textOutput = Array("black") ++ textAndNext.head;
+
+    val nextCommand = textAndNext.tail.head;
+    return DrawFromString(nextCommand.head, nextCommand.tail, output:+ textOutput);
+  }
+
+  private def DrawTextImpl(input: Array[String], output: Array[String]): Array[Array[String]] = {
+    // input = ["test","tekst","woop","END"]
+    // output = ["test", "2", "1"]
+    val terminationStrings = Array("LINE", "RECTANGLE", "CIRCLE", "TEXT-AT", "BOUNDING-BOX", "DRAW", "FILL", "END");
+    if (terminationStrings.contains(input.head)) {
+      return Array(output, input);
+    } else {
+      output(2) = output(2).concat(" " + input.head);
+      return DrawTextImpl(input.tail, output);
+    }
   }
 
   private def DrawBounding(arr: Array[String], output: Array[Array[String]]): Array[Array[String]] = {
@@ -275,6 +297,7 @@ class Draw {
     val t = input.split(Array('(', ')', ' '))
     t.filter(_.nonEmpty)
   }
+
 
 
 }

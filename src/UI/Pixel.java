@@ -9,6 +9,10 @@ public class Pixel {
         this._y = y;
     }
 
+    public boolean isTextPixel() {
+        return false;
+    }
+
     public int get_x() {
         return _x;
     }
