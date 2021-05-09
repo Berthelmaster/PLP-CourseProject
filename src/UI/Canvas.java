@@ -20,6 +20,7 @@ public class Canvas extends JPanel {
     private ArrayList<PixelCollection> pixels;
 
     Canvas(int x_begin, int x_end, int y_begin, int y_end) {
+        this.gridSectionSize = 0;
         this.x_size = (x_end-x_begin);
         this.x_begin = x_begin;
         this.x_end = x_end;
@@ -43,9 +44,14 @@ public class Canvas extends JPanel {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-
-        this.gridSectionSize = Math.min((getWidth() / this.x_size), (getHeight() / y_size));
-        if(gridSectionSize == 0) gridSectionSize = 10;
+        if(gridSectionSize == 0) {
+            this.gridSectionSize = Math.min((getWidth() / this.x_size), (getHeight() / y_size));
+        } else {
+            x_size = getWidth()/gridSectionSize;
+            y_size = getHeight()/gridSectionSize;
+            x_end = x_begin + x_size;
+            y_end = y_begin + y_size;
+        }
         markingSize = gridSectionSize / 5;
         y_zero = getHeight() - (abs(y_begin) * gridSectionSize);
         x_zero = abs(x_begin) * gridSectionSize;
@@ -70,7 +76,7 @@ public class Canvas extends JPanel {
     }
 
     private void renderGrid(Graphics g) {
-        g.setColor(Color.lightGray);
+        g.setColor(new Color(224,224,224));
         int nRowCount = getHeight() / gridSectionSize;
         int currentY = getHeight() - gridSectionSize;
         for (int i = 0; i < nRowCount; i++) {
@@ -91,17 +97,25 @@ public class Canvas extends JPanel {
         g.drawLine(0,y_zero, getWidth(), y_zero);
         g.drawLine(x_zero,0, x_zero, getHeight());
 
+        //x-Axis
         int nColumnCount = getWidth() / gridSectionSize;
         int currentX = gridSectionSize;
+        int x_count = x_begin + 1;
         for (int i = 0; i < nColumnCount; i++) {
             g.drawLine(currentX, y_zero + markingSize, currentX, y_zero - markingSize);
+            String number = String.valueOf(x_count++);
+            if (!number.equals("0")) g.drawString(number, currentX - gridSectionSize/2, y_zero + gridSectionSize);
             currentX = currentX + gridSectionSize;
         }
 
+        //y-Axis
         int nRowCount = getHeight() / gridSectionSize;
         int currentY = getHeight() - gridSectionSize;
+        int y_count = y_begin + 1;
         for (int i = 0; i < nRowCount; i++) {
             g.drawLine(x_zero + markingSize, currentY, x_zero - markingSize, currentY);
+            String number = String.valueOf(y_count++);
+            if (!number.equals("0")) g.drawString(number, x_zero - (gridSectionSize + 2), currentY + gridSectionSize/3);
             currentY = currentY - gridSectionSize;
         }
     }
