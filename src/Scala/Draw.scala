@@ -226,6 +226,19 @@ class Draw {
     return DrawFromString(nextCommand.head, nextCommand.tail, output:+ textOutput);
   }
 
+  private def DrawColoredText(color: String, input: Array[String], output: Array[Array[String]]): Array[Array[String]] = {
+    // input = ["2", "1", "test","tekst","woop","END"]
+    val x = input.head;
+    val y = input.tail.head;
+
+    val textBeginning = Array(x, y, input.tail.tail.head);
+    val textAndNext = DrawTextImpl(input.tail.tail.tail, textBeginning);
+    val textOutput = Array(color) ++ textAndNext.head;
+
+    val nextCommand = textAndNext.tail.head;
+    return DrawFromString(nextCommand.head, nextCommand.tail, output:+ textOutput);
+  }
+
   private def DrawTextImpl(input: Array[String], output: Array[String]): Array[Array[String]] = {
     // input = ["test","tekst","woop","END"]
     // output = ["test", "2", "1"]
