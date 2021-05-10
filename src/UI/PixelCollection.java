@@ -1,19 +1,20 @@
 package UI;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class PixelCollection {
-    private String color;
+    private Color color;
     private ArrayList<Pixel> pixels;
 
     PixelCollection() {
-        color = "";
+        color = null;
         pixels = new ArrayList<>();
     }
 
-    PixelCollection(String[] stringArray) {
-        color = stringArray[0];
+    PixelCollection(String[] stringArray) throws NoSuchFieldException, IllegalAccessException {
+        color = (Color) Color.class.getField(stringArray[0]).get(null);
         pixels = new ArrayList<>();
         if (stringArray.length == 4) {
             pixels.add(new TextPixel(Integer.parseInt(stringArray[1]), Integer.parseInt(stringArray[2]), stringArray[3]));
@@ -24,7 +25,7 @@ public class PixelCollection {
         }
     }
 
-    public String getColor() {
+    public Color getColor() {
         return color;
     }
 
