@@ -352,10 +352,10 @@ class Draw {
   }
 
   private def DrawBounding(input: Array[String], output: Array[Array[String]]): Array[Array[String]] = {
-    val x_origo = ScaleCoordinate(input.head.toInt)
-    val y_origo = ScaleCoordinate(input.tail.head.toInt)
-    val x_end = ScaleCoordinate(input.tail.tail.head.toInt)
-    val y_end = ScaleCoordinate(input.tail.tail.tail.head.toInt)
+    val x_origo = ScaleCoordinate(input.head.toInt) - 1
+    val y_origo = ScaleCoordinate(input.tail.head.toInt) - 1
+    val x_end = ScaleCoordinate(input.tail.tail.head.toInt) - 1
+    val y_end = ScaleCoordinate(input.tail.tail.tail.head.toInt) - 1
 
     BOUNDING_BOX = new BoundingBox(x_origo, y_origo, x_end, y_end)
 
