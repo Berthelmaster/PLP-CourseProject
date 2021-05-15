@@ -170,46 +170,109 @@ class Draw {
 
   private def DrawCircle(arr: Array[String], output: Array[Array[String]]): Array[Array[String]] = {
     // Mid-Point Circle Drawing Algorithm - https://www.geeksforgeeks.org/mid-point-circle-drawing-algorithm
+    val x_center = arr.head.toInt
+    val y_center = arr.tail.head.toInt
     val r = arr.tail.tail.head.toInt
-    val x = r
-    val y = 0
+    println("This is r: " + r)
     val P = 1 - r
+    val nextCommand = arr.tail.tail.tail;
+    //println("Printing next command:" + nextCommand.toString)
+
+    val colour = "black";
+    val CircleArray = Array(colour);
+
+    // Initial Point
+
+    CircleArray :+ (r + x_center).toString;
+    CircleArray :+ (y_center).toString;
+
+    if(r > 0){
+      CircleArray :+ (r + x_center).toString
+      CircleArray :+ (-0 + y_center).toString
+      CircleArray :+ (0 + x_center).toString
+      CircleArray :+ (r + y_center).toString
+      CircleArray :+ (-0 + x_center).toString
+      CircleArray :+ (r + y_center).toString
+    }
 
 
-    val out = MidPointCircleAlgorithm(x,y,r,P,Array.empty)
+    val out = MidPointCircleAlgorithm(x_center,y_center,r,0,P,CircleArray)
 
-    output :+ out
+    CircleArray :+ out
 
-    val buffer = arr.toBuffer
-    buffer.remove(0,2)
-    val newArr = buffer.toArray
-
-    val newHead = newArr.head
-
-    DrawFromString(newHead, newArr, output)
+    DrawFromString(nextCommand.head, nextCommand.tail, output:+ CircleArray)
   }
 
-  private def MidPointCircleAlgorithm(x: Int, y: Int, r: Int, P: Int, output: Array[String]): Array[String] = {
-    val y_new = y + 1
+  private def MidPointCircleAlgorithm(x_center: Int, y_center: Int, r: Int, y_temp: Int, P: Int, output: Array[String]): Array[String] = {
+    var r_val = r
     var p_new = P
-    var x_new = x
+    val val_y_temp = y_temp + 1
+    //Add one to yy
+
+    println("Midpointcircle print:")
 
     if(p_new <= 0){
-      p_new = p_new+2*y+1
+      p_new = p_new + 2 * val_y_temp + 1
     }
     else{
-      x_new = x_new-1
-      p_new = P+2*y-2*x+1
+      r_val = r_val - 1
+      p_new = p_new + 2 * val_y_temp - 2 * r_val + 1
     }
 
-    val outputNew = output :+ p_new.toString
+    if(r_val < y_temp){
+      return output
+    }
 
-    if(x < y) {
-      return MidPointCircleAlgorithm(x_new, y_new, r, p_new, outputNew)
+    output :+ r_val + x_center
+    output :+ val_y_temp+y_center
+    output :+ -r_val + x_center
+    output :+ val_y_temp + y_center
+    output :+ r_val + x_center
+    output :+ -val_y_temp + y_center
+    output :+ -r_val + x_center
+    output :+ -val_y_temp + y_center
+
+
+    println("(" + (r_val + x_center) + ", " + (val_y_temp+y_center) + ")")
+    println("(" + (-r_val + x_center)
+      + ", " + (val_y_temp + y_center) + ")")
+    println("(" + (r_val + x_center) +
+      ", " + (-val_y_temp + y_center) + ")")
+    println("(" + (-r_val + x_center)
+      + ", " + (-val_y_temp + y_center) + ")")
+
+    println("BREAK")
+
+    if(r_val != val_y_temp){
+      output :+ val_y_temp + x_center
+      output :+ r_val + y_center
+      output :+ -val_y_temp + x_center
+      output :+ r_val + y_center
+      output :+ val_y_temp + x_center
+      output :+ -r_val + y_center
+      output :+ -val_y_temp + x_center
+      output :+ -r_val + y_center
+
+      println("(" + (val_y_temp + x_center)
+        + ", " + (r_val + y_center) + ")")
+      println("(" + (-val_y_temp + x_center)
+        + ", " + (r_val + y_center) + ")")
+      println("(" + (val_y_temp + x_center)
+        + ", " + (-r_val + y_center) + ")")
+      println("(" + (-val_y_temp + x_center)
+        + ", " + (-r_val + y_center) +")")
+    }
+
+    MidPointCircleAlgorithm(x_center, y_center, r_val,val_y_temp, p_new, output)
+    //val outputNew = output :+ p_new.toString
+    /*
+    if(r_val > val_y_temp) {
+      MidPointCircleAlgorithm(x_center, y_center, r_val,val_y_temp, p_new, outputNew)
     }
     else { // if (x != y), otherwise there might be no return, resulting in return type being Unit
-      return outputNew
+      outputNew
     }
+     */
   }
 
   private def DrawText(arr: Array[String], output: Array[Array[String]]): Array[Array[String]] = {
@@ -230,6 +293,7 @@ class Draw {
   private def DrawFill(input: Array[String], output: Array[Array[String]]): Array[Array[String]] = input.tail.head match {
     //case "LINE" => DrawLine(tail, output)
     case "RECTANGLE" => FillRectangle(input, output)
+    case "CIRCLE" => FillCircle(input, output)
     //case "CIRCLE" => DrawCircle(tail, output)
     //case "TEXT-AT" => DrawText(tail, output)
     case _ => output // error state
