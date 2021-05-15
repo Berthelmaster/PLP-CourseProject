@@ -10,6 +10,8 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 public class App extends JFrame{
+    private int errorEnumerator = 0;
+    private int logEnumerator = 0;
     private JPanel panelMain;
     private JButton inputButton;
     private JTextField inputField;
@@ -21,13 +23,14 @@ public class App extends JFrame{
     private JPanel errorPanel;
     private JLabel logLabel;
     private JLabel errorLabel;
-    private JTextArea errorArea;
-    private JList list1;
     private JTextArea logArea;
+    private JTextArea errorArea;
     private Draw scaleDrawingEngine = new Draw();
 
     public App() {
         errorArea.setForeground(Color.RED);
+        errorArea.setEditable(false);
+        logArea.setEditable(false);
         canvas = new Canvas(-5,85,-5,55);
 
         panelMain.setBorder(new EmptyBorder(4,8,4,8));
@@ -65,11 +68,11 @@ public class App extends JFrame{
     }
 
     private void logInput() {
-        logArea.append(inputField.getText() + "\n");
+        logArea.append((++logEnumerator) + ". " + inputField.getText() + "\n");
         inputField.setText("");
     }
 
     private void logError(String errorMessage) {
-        errorArea.append(errorMessage + "\n");
+        errorArea.append((++errorEnumerator) + ". " + errorMessage + "\n");
     }
 }
