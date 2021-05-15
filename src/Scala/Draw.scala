@@ -31,6 +31,8 @@ class Draw {
     return DrawFromString(head, tail, outputArrayOfStringArrays)
   }
 
+
+
   def DrawFromString(head: String, tail: Array[String], output: Array[Array[String]]): Array[Array[String]] = head match {
     case "LINE" => DrawLine(tail, output)
     case "RECTANGLE" => DrawRectangle(tail, output)
