@@ -11,7 +11,7 @@ class Draw {
   case class Fill() extends DrawShapes
 
 
-  val testInputLine = "(LINE (1 1) (3 1)) (DRAW red (RECTANGLE (1 1) (3 3)) (RECTANGLE (1 1) (2 2)) (RECTANGLE (1 1) (4 4))) (LINE (1 1) (3 1))"
+  val testInputLine = "(LINE (100 100) (300 100)) (DRAW red (RECTANGLE (100 100) (300 300)) (RECTANGLE (100 100) (200 200)) (RECTANGLE (100 100) (400 400))) (LINE (100 100) (300 100))"
   val END_SIGN = "END"
   val DRAW_END_SIGN = "DRAW_END"
   val DEFAULT_COLOUR_BLACK = "black"
@@ -19,7 +19,7 @@ class Draw {
   def DrawShape(input: String): Array[Array[String]] = {
     val inputNew = input + " " + END_SIGN;
     val testInputLine = this.testInputLine + " " + END_SIGN;
-    val arguments = FilterInput(testInputLine) //use inputNew here
+    val arguments = FilterInput(inputNew) //use inputNew here
     val head = arguments.head
     val tail = arguments.tail
 
@@ -30,6 +30,8 @@ class Draw {
     val outputArrayOfStringArrays = Array.empty[Array[String]];
     return DrawFromString(head, tail, outputArrayOfStringArrays)
   }
+
+
 
   def DrawFromString(head: String, tail: Array[String], output: Array[Array[String]]): Array[Array[String]] = head match {
     case "LINE" => DrawLine(tail, output)
@@ -281,8 +283,46 @@ class Draw {
      */
   }
 
-  private def DrawText(arr: Array[String], output: Array[Array[String]]): Array[Array[String]] = {
-    return output
+  private def DrawText(input: Array[String], output: Array[Array[String]]): Array[Array[String]] = {
+    // input = ["2", "1", "test","tekst","woop","END"]
+    val x = input.head;
+    val y = input.tail.head;
+
+    val textBeginning = Array(x, y, input.tail.tail.head);
+    val textAndNext = DrawTextImpl(input.tail.tail.tail, textBeginning);
+    val textOutput = Array("black") ++ textAndNext.head;
+
+    val nextCommand = textAndNext.tail.head;
+    return DrawFromString(nextCommand.head, nextCommand.tail, output:+ textOutput);
+  }
+
+  private def DrawColoredText(input: Array[String], output: Array[Array[String]], colour: String): Array[Array[String]] = {
+    // input = ["2", "1", "test","tekst","woop","END"]
+    val x = input.head;
+    val y = input.tail.head;
+
+    val textBeginning = Array(x, y, input.tail.tail.head);
+    val textAndNext = DrawTextImpl(input.tail.tail.tail, textBeginning);
+    val textOutput = Array(colour) ++ textAndNext.head;
+
+    val nextCommand = textAndNext.tail.head;
+    if (nextCommand.head.equals(DRAW_END_SIGN)) {
+      return DrawFromString(nextCommand.head, nextCommand.tail, output :+ textOutput);
+    } else {
+      return DrawColourObjects(nextCommand, output :+ textOutput, colour)
+    }
+  }
+
+  private def DrawTextImpl(input: Array[String], output: Array[String]): Array[Array[String]] = {
+    // input = ["test","tekst","woop","END"]
+    // output = ["test", "2", "1"]
+    val terminationStrings = Array("LINE", "RECTANGLE", "CIRCLE", "TEXT-AT", "BOUNDING-BOX", "DRAW", "FILL", END_SIGN, DRAW_END_SIGN);
+    if (terminationStrings.contains(input.head)) {
+      return Array(output, input);
+    } else {
+      output(2) = output(2).concat(" " + input.head);
+      return DrawTextImpl(input.tail, output);
+    }
   }
 
   private def DrawBounding(arr: Array[String], output: Array[Array[String]]): Array[Array[String]] = {
@@ -300,7 +340,7 @@ class Draw {
     case "LINE" => DrawLine(input.tail, output, colour)
     case "RECTANGLE" => DrawRectangle(input.tail, output, colour)
     //case "CIRCLE" => DrawCircle(tail, output)
-    //case "TEXT-AT" => DrawText(tail, output)
+    case "TEXT-AT" => DrawColoredText(input.tail, output, colour)
     case DRAW_END_SIGN => println("DRAW completed completed"); DrawFromString(input.tail.head, input.tail.tail, output);
     case _ => println("DRAW error"); return  output
   }
@@ -310,7 +350,6 @@ class Draw {
     case "RECTANGLE" => FillRectangle(input, output)
     case "CIRCLE" => FillCircle(input, output)
     //case "CIRCLE" => DrawCircle(tail, output)
-    //case "TEXT-AT" => DrawText(tail, output)
     case _ => output // error state
 
     return output
@@ -378,7 +417,5 @@ class Draw {
     val input_array = input_string.split(Array('(', ')', ' '))
     input_array.filter(_.nonEmpty)
   }
-
-
 }
 
