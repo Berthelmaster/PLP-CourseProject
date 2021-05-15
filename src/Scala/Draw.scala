@@ -335,6 +335,29 @@ class Draw {
     }
   }
 
+  private def FillCircle(input: Array[String], output: Array[Array[String]]) : Array[Array[String]] = {
+
+    println("FillCircle Started")
+
+    val colour = input.head;
+    val x1 = input.tail.tail.head.toInt;
+    val y1 = input.tail.tail.tail.head.toInt;
+    val r = input.tail.tail.tail.tail.head.toInt;
+    val P = 1-r
+    val nextCommand = input.tail.tail.tail.tail.tail;
+
+    val shape = MidPointCircleAlgorithm(x1, y1, r,0, P, Array.empty)
+
+    println(shape.mkString(" , "))
+
+    output:+ colour
+    output:+ shape
+
+    println("FillCircle End")
+
+    DrawFromString(nextCommand.head, nextCommand.tail, output)
+  }
+
   def FilterInput(input: String): Array[String] = {
     val t = input.split(Array('(', ')', ' '))
     t.filter(_.nonEmpty)
