@@ -187,7 +187,7 @@ class Draw {
     //println("Printing next command:" + nextCommand.toString)
 
     val colour = "black";
-    val CircleArray = Array(colour);
+    var CircleArray = Array(colour);
 
     // Initial Point
 
@@ -206,7 +206,7 @@ class Draw {
 
     val out = MidPointCircleAlgorithm(x_center,y_center,r,0,P,CircleArray)
 
-    CircleArray :+ out
+    CircleArray = out
 
     DrawFromString(nextCommand.head, nextCommand.tail, output:+ CircleArray)
   }
@@ -393,14 +393,15 @@ class Draw {
     println("FillCircle Started")
 
     val colour = input.head;
-    val x1 = input.tail.tail.head.toInt;
-    val y1 = input.tail.tail.tail.head.toInt;
-    val r = input.tail.tail.tail.tail.head.toInt;
+    val x1 = input.tail.tail.head.toInt
+    val y1 = input.tail.tail.tail.head.toInt
+    val r = input.tail.tail.tail.tail.head.toInt
     val P = 1-r
-    val nextCommand = input.tail.tail.tail.tail.tail;
+    val nextCommand = input.tail.tail.tail.tail.tail
 
     val shape = MidPointCircleAlgorithm(x1, y1, r,0, P, Array.empty)
 
+    println("Print values")
     println(shape.mkString(" , "))
 
     output:+ colour
