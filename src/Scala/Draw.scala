@@ -371,10 +371,10 @@ class Draw {
     "x_origo" +: inputAntiCorrected
 */
     // pre-appending to bounding-box corrected bounding-box values to draw..
-    inputAntiCorrected = (y_end - y_end_unscaled).toString +: inputAntiCorrected
-    inputAntiCorrected = (x_end - x_end_unscaled).toString +: inputAntiCorrected
-    inputAntiCorrected = (y_origo - y_origo_unscaled).toString +: inputAntiCorrected
-    inputAntiCorrected = (x_origo - x_origo_unscaled).toString +: inputAntiCorrected
+    inputAntiCorrected = (y_end - (y_end - y_end_unscaled)).toString +: inputAntiCorrected
+    inputAntiCorrected = (x_end - (x_end - x_end_unscaled)).toString +: inputAntiCorrected
+    inputAntiCorrected = (y_origo - (y_origo - y_origo_unscaled)).toString +: inputAntiCorrected
+    inputAntiCorrected = (x_origo - (x_origo - x_origo_unscaled)).toString +: inputAntiCorrected
 
     return DrawRectangle(inputAntiCorrected, output)
   }
