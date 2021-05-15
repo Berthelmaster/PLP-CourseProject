@@ -15,6 +15,7 @@ class Draw {
   val END_SIGN = "END"
   val DRAW_END_SIGN = "DRAW_END"
   val DEFAULT_COLOUR_BLACK = "black"
+  var highlightedObject: Array[String] = Array.empty
 
   def DrawShape(input: String): Array[Array[String]] = {
     val inputNew = input + " " + END_SIGN;
@@ -28,10 +29,9 @@ class Draw {
     println("DrawShape")
     // Figure out what class to call
     val outputArrayOfStringArrays = Array.empty[Array[String]];
-    return DrawFromString(head, tail, outputArrayOfStringArrays)
+    val output = DrawFromString(head, tail, outputArrayOfStringArrays);
+    return HighlightLastObject(output);
   }
-
-
 
   def DrawFromString(head: String, tail: Array[String], output: Array[Array[String]]): Array[Array[String]] = head match {
     case "LINE" => DrawLine(tail, output)
@@ -329,6 +329,16 @@ class Draw {
     val input_string = input.replace(")))", " " + DRAW_END_SIGN + " ")
     val input_array = input_string.split(Array('(', ')', ' '))
     input_array.filter(_.nonEmpty)
+  }
+
+  private def HighlightLastObject(output: Array[Array[String]]): Array[Array[String]] = {
+    if (output.isEmpty) return output
+    else {
+      var updatedOutput = output;
+      if (highlightedObject.length != 0) updatedOutput = updatedOutput :+ highlightedObject;
+      highlightedObject = output.last;
+      return updatedOutput :+ ("magenta" +: output.last.tail);
+    }
   }
 }
 
