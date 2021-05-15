@@ -404,26 +404,22 @@ class Draw {
     println("Radius: " + r)
     println("P: " + P)
 
-    FillCircleImple(x1, y1, r, P, Array.empty)
-
-
-    val shape = MidPointCircleAlgorithm(x1, y1, r,0, P, Array.empty)
+    val shape = FillCircleImple(x1, y1, r, P, Array.empty)
 
     println("Print values")
     println(shape.mkString(" , "))
 
-    output:+ colour
-    output:+ shape
+    var outputNew = Array(colour)
+
+    outputNew = outputNew ++ shape
 
     println("FillCircle End")
 
-    DrawFromString(nextCommand.head, nextCommand.tail, output)
+    DrawFromString(nextCommand.head, nextCommand.tail, output:+ outputNew)
   }
 
   private def FillCircleImple(x_center: Int, y_center: Int, r: Int, P: Int, output: Array[String]) : Array[String] = {
     var outputNew = output
-
-    println("Fill Circle Implementation started")
 
     if(r == 0){
       return outputNew
