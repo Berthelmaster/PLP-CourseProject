@@ -1,0 +1,39 @@
+import org.sireum.logika._
+
+def IsInsideBoundaryBox(x: Z, y: Z, bxOrigo: Z, byOrigo: Z, bxEnd: Z, byEnd: Z) : B = {
+    l"""{
+        ensures result == (x >= bxOrigo & x <= bxEnd & y >= byOrigo & y <= byEnd)
+    }"""
+    val r: B = x >= bxOrigo & x <= bxEnd & y >= byOrigo & y <= byEnd
+    return r
+}
+
+val x : Z = readInt()
+val y : Z = readInt()
+
+val xOrigo : Z = readInt()
+val yOrigo : Z = readInt()
+val xEnd : Z = readInt()
+val yEnd : Z = readInt()
+
+val res : B = IsInsideBoundaryBox(x, y, xOrigo, yOrigo, xEnd, yEnd)
+
+if (x < xOrigo) {
+    assert(res == false)
+}
+
+if (x > xEnd) {
+    assert(res == false)
+}
+
+if (y < yOrigo) {
+    assert(res == false)
+}
+
+if (y > yEnd) {
+    assert(res == false)
+}
+
+if (x > xOrigo & y > yOrigo & x < xEnd & y < yEnd) {
+    assert(res == true)
+}
