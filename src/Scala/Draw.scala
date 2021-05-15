@@ -272,15 +272,6 @@ class Draw {
     }
 
     MidPointCircleAlgorithm(x_center, y_center, r_val,val_y_temp, p_new, output)
-    //val outputNew = output :+ p_new.toString
-    /*
-    if(r_val > val_y_temp) {
-      MidPointCircleAlgorithm(x_center, y_center, r_val,val_y_temp, p_new, outputNew)
-    }
-    else { // if (x != y), otherwise there might be no return, resulting in return type being Unit
-      outputNew
-    }
-     */
   }
 
   private def DrawText(input: Array[String], output: Array[Array[String]]): Array[Array[String]] = {
