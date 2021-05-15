@@ -39,9 +39,10 @@ class Draw {
     case "CIRCLE" => DrawCircle(tail, output)
     case "TEXT-AT" => DrawText(tail, output)
     case "BOUNDING-BOX" => DrawBounding(tail, output)
-    case "DRAW" =>
+    case "DRAW" => {
       if (!allowedColours.contains(tail.head)) throw new ColourException("Colour Not Allowed");
       else DrawColourObjects(tail.tail, output, tail.head)
+    }
     case "FILL" => DrawFill(tail, output)
     case _ => println("String completed"); println("output size: " + output.length); output.foreach(arr => arr.foreach(str => println(str + " "))); return output;
   }
