@@ -6,7 +6,8 @@ class Draw {
   val DRAW_END_SIGN = "DRAW_END"
   val DEFAULT_COLOUR_BLACK = "black"
   var highlightedObject: Array[String] = Array.empty
-  val SCALING = (16 * 5)
+  val SCALING = 16
+  val SCALING_OFFSET = SCALING * 5
 
   def DrawShape(input: String): Array[Array[String]] = {
     val inputNew = input + " " + END_SIGN;
@@ -37,10 +38,10 @@ class Draw {
 
   def DrawLine(input: Array[String], output: Array[Array[String]], colour: String = DEFAULT_COLOUR_BLACK): Array[Array[String]] = {
     println("LINE MATCHED")
-    val x0 = input.head.toInt * SCALING;
-    val y0 = input.tail.head.toInt * SCALING;
-    val x1 = input.tail.tail.head.toInt * SCALING;
-    val y1 = input.tail.tail.tail.head.toInt * SCALING;
+    val x0 = ScaleCoordinate(input.head.toInt)
+    val y0 = ScaleCoordinate(input.tail.head.toInt)
+    val x1 = ScaleCoordinate(input.tail.tail.head.toInt)
+    val y1 = ScaleCoordinate(input.tail.tail.tail.head.toInt)
     val nextCommand = input.tail.tail.tail.tail;
 
     //Bresenham recursively
@@ -144,11 +145,11 @@ class Draw {
     println("(" + input.head + ", " + input.tail.head + ")");
     println("(" + input.tail.tail.head + ", " + input.tail.tail.tail.head + ")");
 
-    val x0 = input.head.toInt * SCALING;
-    val y0 = input.tail.head.toInt * SCALING;
-    val x1 = input.tail.tail.head.toInt * SCALING;
-    val y1 = input.tail.tail.tail.head.toInt * SCALING;
-    val nextCommand = input.tail.tail.tail.tail;
+    val x0 = ScaleCoordinate(input.head.toInt)
+    val y0 = ScaleCoordinate(input.tail.head.toInt)
+    val x1 = ScaleCoordinate(input.tail.tail.head.toInt)
+    val y1 = ScaleCoordinate(input.tail.tail.tail.head.toInt)
+    val nextCommand = input.tail.tail.tail.tail
 
     val lineStart = Array(colour);
     val leftLine = BresenhamsAlgorithm(x0, y0, x0, y1, lineStart);
@@ -169,9 +170,9 @@ class Draw {
 
   private def DrawCircle(arr: Array[String], output: Array[Array[String]]): Array[Array[String]] = {
     // Mid-Point Circle Drawing Algorithm - https://www.geeksforgeeks.org/mid-point-circle-drawing-algorithm
-    val x_center = arr.head.toInt * SCALING
-    val y_center = arr.tail.head.toInt * SCALING
-    val r = arr.tail.tail.head.toInt * SCALING
+    val x_center = ScaleCoordinate(arr.head.toInt)
+    val y_center = ScaleCoordinate(arr.tail.head.toInt)
+    val r = ScaleCoordinate(arr.tail.tail.head.toInt)
     println("This is r: " + r)
     val P = 1 - r
     val nextCommand = arr.tail.tail.tail;
@@ -280,8 +281,8 @@ class Draw {
 
   private def DrawText(input: Array[String], output: Array[Array[String]]): Array[Array[String]] = {
     // input = ["2", "1", "test","tekst","woop","END"]
-    val x = input.head.toInt * SCALING;
-    val y = input.tail.head.toInt * SCALING;
+    val x = ScaleCoordinate(input.head.toInt)
+    val y = ScaleCoordinate(input.tail.head.toInt)
 
     val textBeginning = Array(x.toString, y.toString, input.tail.tail.head);
     val textAndNext = DrawTextImpl(input.tail.tail.tail, textBeginning);
@@ -293,8 +294,8 @@ class Draw {
 
   private def DrawColoredText(input: Array[String], output: Array[Array[String]], colour: String): Array[Array[String]] = {
     // input = ["2", "1", "test","tekst","woop","END"]
-    val x = input.head.toInt * SCALING;
-    val y = input.tail.head.toInt * SCALING;
+    val x = ScaleCoordinate(input.head.toInt)
+    val y = ScaleCoordinate(input.tail.head.toInt)
 
     val textBeginning = Array(x.toString, y.toString, input.tail.tail.head);
     val textAndNext = DrawTextImpl(input.tail.tail.tail, textBeginning);
@@ -353,11 +354,11 @@ class Draw {
   private def FillRectangle(input: Array[String], output: Array[Array[String]]): Array[Array[String]] = {
     // input = ["Red", "RECTANGLE", "2", "1", "3","4"]
     val colour = input.head;
-    val x1 = input.tail.tail.head.toInt * SCALING;
-    val y1 = input.tail.tail.tail.head.toInt * SCALING;
-    val x2 = input.tail.tail.tail.tail.head.toInt * SCALING;
-    val y2 = input.tail.tail.tail.tail.tail.head.toInt * SCALING;
-    val nextCommand = input.tail.tail.tail.tail.tail.tail;
+    val x1 = ScaleCoordinate(input.tail.tail.head.toInt)
+    val y1 = ScaleCoordinate(input.tail.tail.tail.head.toInt)
+    val x2 = ScaleCoordinate(input.tail.tail.tail.tail.head.toInt)
+    val y2 = ScaleCoordinate(input.tail.tail.tail.tail.tail.head.toInt)
+    val nextCommand = input.tail.tail.tail.tail.tail.tail
     println("x2: " + x2 + " y2: " + y2)
     val shapeStart = Array(colour)
 
@@ -389,9 +390,9 @@ class Draw {
     println("FillCircle Started")
 
     val colour = input.head;
-    val x1 = input.tail.tail.head.toInt * SCALING
-    val y1 = input.tail.tail.tail.head.toInt * SCALING
-    val r = input.tail.tail.tail.tail.head.toInt * SCALING
+    val x1 = ScaleCoordinate(input.tail.tail.head.toInt)
+    val y1 = ScaleCoordinate(input.tail.tail.tail.head.toInt)
+    val r = ScaleCoordinate(input.tail.tail.tail.tail.head.toInt)
     val P = 1-r
     val nextCommand = input.tail.tail.tail.tail.tail
 
@@ -461,6 +462,10 @@ class Draw {
       highlightedObject = output.last;
       return updatedOutput :+ ("magenta" +: output.last.tail);
     }
+  }
+
+  private def ScaleCoordinate(coordinate: Int): Int = {
+    coordinate * SCALING + SCALING_OFFSET
   }
 }
 
