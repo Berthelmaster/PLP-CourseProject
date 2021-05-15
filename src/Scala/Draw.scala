@@ -3,7 +3,7 @@ package Scala
 class Draw {
   class BoundingBox(var x_origo: Int, var y_origo: Int, var x_end: Int, var y_end: Int)
 
-  val testInputLine = "(BOUNDING-BOX (1 1) (50 50))"// (LINE (10 10) (30 10)) (DRAW red (RECTANGLE (10 10) (30 30)) (RECTANGLE (10 10) (20 20)) (RECTANGLE (10 10) (40 40))) (LINE (10 10) (30 10))"
+  val testInputLine = "(BOUNDING-BOX (1 1) (10 10))"// (LINE (10 10) (30 10)) (DRAW red (RECTANGLE (10 10) (30 30)) (RECTANGLE (10 10) (20 20)) (RECTANGLE (10 10) (40 40))) (LINE (10 10) (30 10))"
   val END_SIGN = "END"
   val DRAW_END_SIGN = "DRAW_END"
   val DEFAULT_COLOUR_BLACK = "black"
@@ -352,10 +352,15 @@ class Draw {
   }
 
   private def DrawBounding(input: Array[String], output: Array[Array[String]]): Array[Array[String]] = {
-    val x_origo = ScaleCoordinate(input.head.toInt)
-    val y_origo = ScaleCoordinate(input.tail.head.toInt)
-    val x_end = ScaleCoordinate(input.tail.tail.head.toInt)
-    val y_end = ScaleCoordinate(input.tail.tail.tail.head.toInt)
+    val x_origo_unscaled = input.head.toInt
+    val y_origo_unscaled = input.tail.head.toInt
+    val x_end_unscaled = input.tail.tail.head.toInt
+    val y_end_unscaled = input.tail.tail.tail.head.toInt
+
+    val x_origo = ScaleCoordinate(x_origo_unscaled)
+    val y_origo = ScaleCoordinate(y_origo_unscaled)
+    val x_end = ScaleCoordinate(x_end_unscaled)
+    val y_end = ScaleCoordinate(y_end_unscaled)
 
     BOUNDING_BOX = new BoundingBox(x_origo, y_origo, x_end, y_end)
 
@@ -366,10 +371,10 @@ class Draw {
     "x_origo" +: inputAntiCorrected
 */
     // pre-appending to bounding-box corrected bounding-box values to draw..
-    inputAntiCorrected = DescaleBoundingValue(y_end).toString +: inputAntiCorrected
-    inputAntiCorrected = DescaleBoundingValue(x_end).toString +: inputAntiCorrected
-    inputAntiCorrected = DescaleBoundingValue(y_origo).toString +: inputAntiCorrected
-    inputAntiCorrected = DescaleBoundingValue(x_origo).toString +: inputAntiCorrected
+    inputAntiCorrected = (y_end - y_end_unscaled).toString +: inputAntiCorrected
+    inputAntiCorrected = (x_end - x_end_unscaled).toString +: inputAntiCorrected
+    inputAntiCorrected = (y_origo - y_origo_unscaled).toString +: inputAntiCorrected
+    inputAntiCorrected = (x_origo - x_origo_unscaled).toString +: inputAntiCorrected
 
     return DrawRectangle(inputAntiCorrected, output)
   }
