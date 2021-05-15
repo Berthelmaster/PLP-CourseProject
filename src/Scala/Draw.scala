@@ -10,7 +10,7 @@ class Draw {
   case class DrawObjects() extends DrawShapes
   case class Fill() extends DrawShapes
 
-
+  val allowedColours: Array[String] = Array("white", "lightGray", "gray", "darkGray", "black", "red", "pink", "orange", "yellow", "green", "magenta", "cyan", "blue");
   val testInputLine = "(LINE (100 100) (300 100)) (DRAW red (RECTANGLE (100 100) (300 300)) (RECTANGLE (100 100) (200 200)) (RECTANGLE (100 100) (400 400))) (LINE (100 100) (300 100))"
   val END_SIGN = "END"
   val DRAW_END_SIGN = "DRAW_END"
@@ -39,7 +39,9 @@ class Draw {
     case "CIRCLE" => DrawCircle(tail, output)
     case "TEXT-AT" => DrawText(tail, output)
     case "BOUNDING-BOX" => DrawBounding(tail, output)
-    case "DRAW" => DrawColourObjects(tail.tail, output, tail.head)
+    case "DRAW" =>
+      if (!allowedColours.contains(tail.head)) throw new ColourException("Colour Not Allowed");
+      else DrawColourObjects(tail.tail, output, tail.head)
     case "FILL" => DrawFill(tail, output)
     case _ => println("String completed"); println("output size: " + output.length); output.foreach(arr => arr.foreach(str => println(str + " "))); return output;
   }
@@ -273,7 +275,6 @@ class Draw {
 
   private def DrawColourObjects(input: Array[String], output: Array[Array[String]], colour: String): Array[Array[String]] = input.head match {
     // output when done wiht DRAW all shapes in one string[] = ["red", 1, 2, 1, 2, 1, 2, 1, 2, 1, 2] <- containing two shapes
-
     case "LINE" => DrawLine(input.tail, output, colour)
     case "RECTANGLE" => DrawRectangle(input.tail, output, colour)
     //case "CIRCLE" => DrawCircle(tail, output)
