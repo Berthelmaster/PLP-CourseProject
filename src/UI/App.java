@@ -22,6 +22,7 @@ public class App extends JFrame{
     private JLabel logLabel;
     private JLabel errorLabel;
     private JTextArea errorArea;
+    private JList list1;
     private JTextArea logArea;
     private Draw scaleDrawingEngine = new Draw();
 
