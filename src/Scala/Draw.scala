@@ -11,6 +11,7 @@ class Draw {
   val SCALING = 16
   val SCALING_OFFSET = SCALING * 5
   var BOUNDING_BOX = new BoundingBox(0, 0, 0, 0)
+  var BOUNDING_BOX_SET = false
 
   def DrawShape(input: String): Array[Array[String]] = {
     //val inputNew = input + " " + END_SIGN;
@@ -163,6 +164,9 @@ class Draw {
     val topLineAdded = BresenhamsAlgorithm(x0+1, y1, x1, y1, leftLine);
     val rightLineAdded = BresenhamsAlgorithm(x1, y1-1, x1, y0, topLineAdded);
     val bottomLineAdded = BresenhamsAlgorithm(x1-1, y0, x0+1, y0, rightLineAdded);
+
+    // is called everytime, not very efficient..
+    BOUNDING_BOX_SET = true
 
     AddShapeAndDecideNextDrawMethod(nextCommand, bottomLineAdded, output, colour)
   }
@@ -364,19 +368,20 @@ class Draw {
 
     BOUNDING_BOX = new BoundingBox(x_origo, y_origo, x_end, y_end)
 
-    var inputAntiCorrected = input.tail.tail.tail.tail
+   // var inputAntiCorrected = input.tail.tail.tail.tail
     /*"y_end" +: inputAntiCorrected
     "x_end" +: inputAntiCorrected
     "y_origo" +: inputAntiCorrected
     "x_origo" +: inputAntiCorrected
 */
     // pre-appending to bounding-box corrected bounding-box values to draw..
-    inputAntiCorrected = (y_end - (y_end - y_end_unscaled)).toString +: inputAntiCorrected
+    /*inputAntiCorrected = (y_end - (y_end - y_end_unscaled)).toString +: inputAntiCorrected
     inputAntiCorrected = (x_end - (x_end - x_end_unscaled)).toString +: inputAntiCorrected
     inputAntiCorrected = (y_origo - (y_origo - y_origo_unscaled)).toString +: inputAntiCorrected
     inputAntiCorrected = (x_origo - (x_origo - x_origo_unscaled)).toString +: inputAntiCorrected
+*/
 
-    return DrawRectangle(inputAntiCorrected, output)
+    return DrawRectangle(input, output)
   }
 
   private def DescaleBoundingValue(value: Int): Int = {
@@ -437,8 +442,15 @@ class Draw {
   def AddPixel(x: Int, y: Int, output: Array[String]): Array[String] = {
     var outputNew = output
 
-    val x_corrected = x + BOUNDING_BOX.x_origo
-    val y_corrected = y + BOUNDING_BOX.y_origo
+    var x_corrected = 0
+    var y_corrected = 0
+    if (BOUNDING_BOX_SET) {
+      x_corrected = x + BOUNDING_BOX.x_origo
+      y_corrected = y + BOUNDING_BOX.y_origo
+    } else {
+      x_corrected = x
+      y_corrected = y
+    }
 
     if (CheckWithinBoundingBox(x_corrected, y_corrected)) {
       outputNew = outputNew :+ x_corrected.toString
