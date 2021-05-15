@@ -238,7 +238,7 @@ class Draw {
     outputNew = outputNew :+ (-r_val + x_center).toString
     outputNew = outputNew :+ (-val_y_temp + y_center).toString
 
-
+/*
     println("(" + (r_val + x_center) + ", " + (val_y_temp+y_center) + ")")
     println("(" + (-r_val + x_center)
       + ", " + (val_y_temp + y_center) + ")")
@@ -246,6 +246,8 @@ class Draw {
       ", " + (-val_y_temp + y_center) + ")")
     println("(" + (-r_val + x_center)
       + ", " + (-val_y_temp + y_center) + ")")
+
+ */
 
     println("BREAK")
 
@@ -259,6 +261,7 @@ class Draw {
       outputNew = outputNew :+ (-val_y_temp + x_center).toString
       outputNew = outputNew :+ (-r_val + y_center).toString
 
+      /*
       println("(" + (val_y_temp + x_center)
         + ", " + (r_val + y_center) + ")")
       println("(" + (-val_y_temp + x_center)
@@ -267,6 +270,8 @@ class Draw {
         + ", " + (-r_val + y_center) + ")")
       println("(" + (-val_y_temp + x_center)
         + ", " + (-r_val + y_center) +")")
+
+       */
     }
 
 
