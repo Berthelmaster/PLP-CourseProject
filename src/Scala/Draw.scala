@@ -1,16 +1,6 @@
 package Scala
 
 class Draw {
-  sealed abstract class DrawShapes
-  case class Line() extends DrawShapes
-  case class Rectangle() extends DrawShapes
-  case class Circle() extends DrawShapes
-  case class Text() extends DrawShapes
-  case class BoundingBox() extends DrawShapes
-  case class DrawObjects() extends DrawShapes
-  case class Fill() extends DrawShapes
-
-
   val testInputLine = "(LINE (100 100) (300 100)) (DRAW red (RECTANGLE (100 100) (300 300)) (RECTANGLE (100 100) (200 200)) (RECTANGLE (100 100) (400 400))) (LINE (100 100) (300 100))"
   val END_SIGN = "END"
   val DRAW_END_SIGN = "DRAW_END"
