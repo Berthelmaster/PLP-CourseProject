@@ -49,11 +49,7 @@ public class App extends JFrame{
                     ArrayList<PixelCollection> pixels = calculateDrawing(inputField.getText());
                     pixels.forEach(drawing -> canvas.drawPixels(pixels));
                 } catch (Exception exception) {
-                    if (exception instanceof NoSuchFieldException || exception instanceof IllegalAccessException) {
-                        logError("No such color found - " + exception.getMessage());
-                    } else {
-                        logError(exception.getMessage());
-                    }
+                    logError(exception.getMessage());
                 }
                 logInput();
             }
