@@ -404,14 +404,15 @@ class Draw {
     println("Radius: " + r)
     println("P: " + P)
 
-    val shape = FillCircleImple(x1, y1, r, P, Array.empty)
-
-    println("Print values")
-    println(shape.mkString(" , "))
+    val area = FillCircleImple(x1, y1, r, P, Array.empty)
 
     var outputNew = Array(colour)
 
-    outputNew = outputNew ++ shape
+    outputNew = outputNew ++ area
+
+    println("COmplete CIRCLE")
+    println(outputNew.mkString(","))
+    println(outputNew.length)
 
     println("FillCircle End")
 
