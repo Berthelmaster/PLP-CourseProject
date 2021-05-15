@@ -1,20 +1,12 @@
 package Scala
 
 class Draw {
-  sealed abstract class DrawShapes
-  case class Line() extends DrawShapes
-  case class Rectangle() extends DrawShapes
-  case class Circle() extends DrawShapes
-  case class Text() extends DrawShapes
-  case class BoundingBox() extends DrawShapes
-  case class DrawObjects() extends DrawShapes
-  case class Fill() extends DrawShapes
-
-
   val testInputLine = "(LINE (100 100) (300 100)) (DRAW red (RECTANGLE (100 100) (300 300)) (RECTANGLE (100 100) (200 200)) (RECTANGLE (100 100) (400 400))) (LINE (100 100) (300 100))"
   val END_SIGN = "END"
   val DRAW_END_SIGN = "DRAW_END"
   val DEFAULT_COLOUR_BLACK = "black"
+  var highlightedObject: Array[String] = Array.empty
+  val SCALING = (16 * 5)
 
   def DrawShape(input: String): Array[Array[String]] = {
     val inputNew = input + " " + END_SIGN;
@@ -28,10 +20,9 @@ class Draw {
     println("DrawShape")
     // Figure out what class to call
     val outputArrayOfStringArrays = Array.empty[Array[String]];
-    return DrawFromString(head, tail, outputArrayOfStringArrays)
+    val output = DrawFromString(head, tail, outputArrayOfStringArrays);
+    return HighlightLastObject(output);
   }
-
-
 
   def DrawFromString(head: String, tail: Array[String], output: Array[Array[String]]): Array[Array[String]] = head match {
     case "LINE" => DrawLine(tail, output)
@@ -46,10 +37,10 @@ class Draw {
 
   def DrawLine(input: Array[String], output: Array[Array[String]], colour: String = DEFAULT_COLOUR_BLACK): Array[Array[String]] = {
     println("LINE MATCHED")
-    val x0 = input.head.toInt;
-    val y0 = input.tail.head.toInt;
-    val x1 = input.tail.tail.head.toInt;
-    val y1 = input.tail.tail.tail.head.toInt;
+    val x0 = input.head.toInt * SCALING;
+    val y0 = input.tail.head.toInt * SCALING;
+    val x1 = input.tail.tail.head.toInt * SCALING;
+    val y1 = input.tail.tail.tail.head.toInt * SCALING;
     val nextCommand = input.tail.tail.tail.tail;
 
     //Bresenham recursively
@@ -153,10 +144,10 @@ class Draw {
     println("(" + input.head + ", " + input.tail.head + ")");
     println("(" + input.tail.tail.head + ", " + input.tail.tail.tail.head + ")");
 
-    val x0 = input.head.toInt;
-    val y0 = input.tail.head.toInt;
-    val x1 = input.tail.tail.head.toInt;
-    val y1 = input.tail.tail.tail.head.toInt;
+    val x0 = input.head.toInt * SCALING;
+    val y0 = input.tail.head.toInt * SCALING;
+    val x1 = input.tail.tail.head.toInt * SCALING;
+    val y1 = input.tail.tail.tail.head.toInt * SCALING;
     val nextCommand = input.tail.tail.tail.tail;
 
     val lineStart = Array(colour);
@@ -178,9 +169,9 @@ class Draw {
 
   private def DrawCircle(arr: Array[String], output: Array[Array[String]]): Array[Array[String]] = {
     // Mid-Point Circle Drawing Algorithm - https://www.geeksforgeeks.org/mid-point-circle-drawing-algorithm
-    val x_center = arr.head.toInt
-    val y_center = arr.tail.head.toInt
-    val r = arr.tail.tail.head.toInt
+    val x_center = arr.head.toInt * SCALING
+    val y_center = arr.tail.head.toInt * SCALING
+    val r = arr.tail.tail.head.toInt * SCALING
     println("This is r: " + r)
     val P = 1 - r
     val nextCommand = arr.tail.tail.tail;
@@ -238,7 +229,7 @@ class Draw {
     outputNew = outputNew :+ (-r_val + x_center).toString
     outputNew = outputNew :+ (-val_y_temp + y_center).toString
 
-
+/*
     println("(" + (r_val + x_center) + ", " + (val_y_temp+y_center) + ")")
     println("(" + (-r_val + x_center)
       + ", " + (val_y_temp + y_center) + ")")
@@ -246,6 +237,8 @@ class Draw {
       ", " + (-val_y_temp + y_center) + ")")
     println("(" + (-r_val + x_center)
       + ", " + (-val_y_temp + y_center) + ")")
+
+ */
 
     println("BREAK")
 
@@ -259,6 +252,7 @@ class Draw {
       outputNew = outputNew :+ (-val_y_temp + x_center).toString
       outputNew = outputNew :+ (-r_val + y_center).toString
 
+      /*
       println("(" + (val_y_temp + x_center)
         + ", " + (r_val + y_center) + ")")
       println("(" + (-val_y_temp + x_center)
@@ -267,6 +261,8 @@ class Draw {
         + ", " + (-r_val + y_center) + ")")
       println("(" + (-val_y_temp + x_center)
         + ", " + (-r_val + y_center) +")")
+
+       */
     }
 
 
@@ -284,10 +280,10 @@ class Draw {
 
   private def DrawText(input: Array[String], output: Array[Array[String]]): Array[Array[String]] = {
     // input = ["2", "1", "test","tekst","woop","END"]
-    val x = input.head;
-    val y = input.tail.head;
+    val x = input.head.toInt * SCALING;
+    val y = input.tail.head.toInt * SCALING;
 
-    val textBeginning = Array(x, y, input.tail.tail.head);
+    val textBeginning = Array(x.toString, y.toString, input.tail.tail.head);
     val textAndNext = DrawTextImpl(input.tail.tail.tail, textBeginning);
     val textOutput = Array("black") ++ textAndNext.head;
 
@@ -297,10 +293,10 @@ class Draw {
 
   private def DrawColoredText(input: Array[String], output: Array[Array[String]], colour: String): Array[Array[String]] = {
     // input = ["2", "1", "test","tekst","woop","END"]
-    val x = input.head;
-    val y = input.tail.head;
+    val x = input.head.toInt * SCALING;
+    val y = input.tail.head.toInt * SCALING;
 
-    val textBeginning = Array(x, y, input.tail.tail.head);
+    val textBeginning = Array(x.toString, y.toString, input.tail.tail.head);
     val textAndNext = DrawTextImpl(input.tail.tail.tail, textBeginning);
     val textOutput = Array(colour) ++ textAndNext.head;
 
@@ -357,10 +353,10 @@ class Draw {
   private def FillRectangle(input: Array[String], output: Array[Array[String]]): Array[Array[String]] = {
     // input = ["Red", "RECTANGLE", "2", "1", "3","4"]
     val colour = input.head;
-    val x1 = input.tail.tail.head.toInt;
-    val y1 = input.tail.tail.tail.head.toInt;
-    val x2 = input.tail.tail.tail.tail.head.toInt;
-    val y2 = input.tail.tail.tail.tail.tail.head.toInt;
+    val x1 = input.tail.tail.head.toInt * SCALING;
+    val y1 = input.tail.tail.tail.head.toInt * SCALING;
+    val x2 = input.tail.tail.tail.tail.head.toInt * SCALING;
+    val y2 = input.tail.tail.tail.tail.tail.head.toInt * SCALING;
     val nextCommand = input.tail.tail.tail.tail.tail.tail;
     println("x2: " + x2 + " y2: " + y2)
     val shapeStart = Array(colour)
@@ -393,9 +389,9 @@ class Draw {
     println("FillCircle Started")
 
     val colour = input.head;
-    val x1 = input.tail.tail.head.toInt
-    val y1 = input.tail.tail.tail.head.toInt
-    val r = input.tail.tail.tail.tail.head.toInt
+    val x1 = input.tail.tail.head.toInt * SCALING
+    val y1 = input.tail.tail.tail.head.toInt * SCALING
+    val r = input.tail.tail.tail.tail.head.toInt * SCALING
     val P = 1-r
     val nextCommand = input.tail.tail.tail.tail.tail
 
@@ -404,10 +400,24 @@ class Draw {
     println("Radius: " + r)
     println("P: " + P)
 
+    var initialCircle = Array[String]()
+    initialCircle = initialCircle :+ (r + x1).toString;
+    initialCircle = initialCircle :+ (y1).toString;
+
+    if(r > 0){
+      initialCircle = initialCircle :+ (r + x1).toString
+      initialCircle = initialCircle :+ (-0 + y1).toString
+      initialCircle = initialCircle :+ (0 + x1).toString
+      initialCircle = initialCircle :+ (r + y1).toString
+      initialCircle = initialCircle :+ (-0 + x1).toString
+      initialCircle =initialCircle :+ (r + y1).toString
+    }
+
     val area = FillCircleImple(x1, y1, r, P, Array.empty)
 
     var outputNew = Array(colour)
 
+    outputNew = outputNew ++ initialCircle
     outputNew = outputNew ++ area
 
     println("COmplete CIRCLE")
@@ -441,6 +451,16 @@ class Draw {
     val input_string = input.replace(")))", " " + DRAW_END_SIGN + " ")
     val input_array = input_string.split(Array('(', ')', ' '))
     input_array.filter(_.nonEmpty)
+  }
+
+  private def HighlightLastObject(output: Array[Array[String]]): Array[Array[String]] = {
+    if (output.isEmpty) return output
+    else {
+      var updatedOutput = output;
+      if (highlightedObject.length != 0) updatedOutput = updatedOutput :+ highlightedObject;
+      highlightedObject = output.last;
+      return updatedOutput :+ ("magenta" +: output.last.tail);
+    }
   }
 }
 
