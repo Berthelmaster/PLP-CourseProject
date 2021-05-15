@@ -98,10 +98,11 @@ class Draw {
   }
 
   def BresenhamLineLowRecursive(x0: Int, y0: Int, x1: Int, y1: Int, dx: Int, dy: Int, D: Int, yi: Int, output: Array[String]): Array[String] = {
-    var outputNew = output;
+    /*var outputNew = output;
     outputNew = outputNew :+ x0.toString;
     outputNew = outputNew :+ y0.toString;
-    println("(" + x0 + ", " + y0 + ")");
+    println("(" + x0 + ", " + y0 + ")");*/
+    var outputNew = AddPixel(x0, y0, output)
 
     if (x0 < x1) { // might need to be <=
       if (D > 0) {
@@ -132,10 +133,11 @@ class Draw {
   }
 
   def BresenhamLineHighRecursive(x0: Int, y0: Int, x1: Int, y1: Int, dx: Int, dy: Int, D: Int, xi: Int, output: Array[String]): Array[String] = {
-    var outputNew = output;
-    outputNew = outputNew :+ x0.toString;
-    outputNew = outputNew :+ y0.toString;
-    println("(" + x0 + ", " + y0 + ")");
+    var outputNew = AddPixel(x0, y0, output)
+    //var outputNew = output;
+    //outputNew = outputNew :+ x0.toString;
+    //outputNew = outputNew :+ y0.toString;
+    //println("(" + x0 + ", " + y0 + ")");
 
     if (y0 < y1) {
       if (D > 0) {
@@ -195,16 +197,20 @@ class Draw {
 
     // Initial Point
 
-    CircleArray :+ (r + x_center).toString;
-    CircleArray :+ (y_center).toString;
+    CircleArray = AddPixel((r + x_center), (y_center), CircleArray)
+    //CircleArray :+ (r + x_center).toString;
+    //CircleArray :+ (y_center).toString;
 
     if(r > 0){
-      CircleArray :+ (r + x_center).toString
-      CircleArray :+ (-0 + y_center).toString
-      CircleArray :+ (0 + x_center).toString
-      CircleArray :+ (r + y_center).toString
-      CircleArray :+ (-0 + x_center).toString
-      CircleArray :+ (r + y_center).toString
+      CircleArray = AddPixel((r + x_center), (-0 + y_center), CircleArray)
+      //CircleArray :+ (r + x_center).toString
+      //CircleArray :+ (-0 + y_center).toString
+      CircleArray = AddPixel((0 + x_center), (r + y_center), CircleArray)
+      //CircleArray :+ (0 + x_center).toString
+      //CircleArray :+ (r + y_center).toString
+      CircleArray = AddPixel((-0 + x_center), (r + y_center), CircleArray)
+      //CircleArray :+ (-0 + x_center).toString
+      //CircleArray :+ (r + y_center).toString
     }
 
 
@@ -233,14 +239,18 @@ class Draw {
       return outputNew
     }
 
-    outputNew = outputNew :+ (r_val + x_center).toString
-    outputNew = outputNew :+ (val_y_temp+y_center).toString
-    outputNew = outputNew :+ (-r_val + x_center).toString
-    outputNew = outputNew :+ (val_y_temp + y_center).toString
-    outputNew = outputNew :+ (r_val + x_center).toString
-    outputNew = outputNew :+ (-val_y_temp + y_center).toString
-    outputNew = outputNew :+ (-r_val + x_center).toString
-    outputNew = outputNew :+ (-val_y_temp + y_center).toString
+    outputNew = AddPixel((r_val + x_center), (val_y_temp+y_center), outputNew)
+    //outputNew = outputNew :+ (r_val + x_center).toString
+    //outputNew = outputNew :+ (val_y_temp+y_center).toString
+    outputNew = AddPixel((-r_val + x_center), (val_y_temp + y_center), outputNew)
+    //outputNew = outputNew :+ (-r_val + x_center).toString
+    //outputNew = outputNew :+ (val_y_temp + y_center).toString
+    outputNew = AddPixel((r_val + x_center), (-val_y_temp + y_center), outputNew)
+    //outputNew = outputNew :+ (r_val + x_center).toString
+    //outputNew = outputNew :+ (-val_y_temp + y_center).toString
+    outputNew = AddPixel((-r_val + x_center), (-val_y_temp + y_center), outputNew)
+    //outputNew = outputNew :+ (-r_val + x_center).toString
+    //outputNew = outputNew :+ (-val_y_temp + y_center).toString
 
 
     println("(" + (r_val + x_center) + ", " + (val_y_temp+y_center) + ")")
@@ -254,14 +264,18 @@ class Draw {
     println("BREAK")
 
     if(r_val != val_y_temp){
-      outputNew = outputNew :+ (val_y_temp + x_center).toString
-      outputNew = outputNew :+ (r_val + y_center).toString
-      outputNew = outputNew :+ (-val_y_temp + x_center).toString
-      outputNew = outputNew :+ (r_val + y_center).toString
-      outputNew = outputNew :+ (val_y_temp + x_center).toString
-      outputNew = outputNew :+ (-r_val + y_center).toString
-      outputNew = outputNew :+ (-val_y_temp + x_center).toString
-      outputNew = outputNew :+ (-r_val + y_center).toString
+      outputNew = AddPixel((val_y_temp + x_center), (r_val + y_center), outputNew)
+      //outputNew = outputNew :+ (val_y_temp + x_center).toString
+      //outputNew = outputNew :+ (r_val + y_center).toString
+      outputNew = AddPixel((-val_y_temp + x_center), (r_val + y_center), outputNew)
+      //outputNew = outputNew :+ (-val_y_temp + x_center).toString
+      //outputNew = outputNew :+ (r_val + y_center).toString
+      outputNew = AddPixel((val_y_temp + x_center), (-r_val + y_center), outputNew)
+      //outputNew = outputNew :+ (val_y_temp + x_center).toString
+      //outputNew = outputNew :+ (-r_val + y_center).toString
+      outputNew = AddPixel((-val_y_temp + x_center), (-r_val + y_center), outputNew)
+      //outputNew = outputNew :+ (-val_y_temp + x_center).toString
+      //outputNew = outputNew :+ (-r_val + y_center).toString
 
       println("(" + (val_y_temp + x_center)
         + ", " + (r_val + y_center) + ")")
@@ -329,17 +343,13 @@ class Draw {
   }
 
   private def DrawBounding(input: Array[String], output: Array[Array[String]]): Array[Array[String]] = {
-    // draw rectangle?
-
-    // set global bound box start pixel
-    // In pixel drawing algorithmes, make check to see if out of bound, before adding them to the array
-
     val x_origo = input.head.toInt;
     val y_origo = input.tail.head.toInt;
     val x_end = input.tail.tail.head.toInt;
     val y_end = input.tail.tail.tail.head.toInt;
 
     BOUNDING_BOX = new BoundingBox(x_origo, y_origo, x_end, y_end)
+
     return DrawRectangle(input, output)
   }
 
@@ -372,7 +382,6 @@ class Draw {
     val x2 = input.tail.tail.tail.tail.head.toInt;
     val y2 = input.tail.tail.tail.tail.tail.head.toInt;
     val nextCommand = input.tail.tail.tail.tail.tail.tail;
-    println("x2: " + x2 + " y2: " + y2)
     val shapeStart = Array(colour)
 
     val shape = FillRectangleImpl(x1, x1, y1, x2, y2, shapeStart)
@@ -383,8 +392,7 @@ class Draw {
   private def FillRectangleImpl(x1_origin: Int, x: Int, y: Int, x2: Int, y2: Int, output: Array[String]): Array[String] = {
     var outputNew = AddPixel(x, y, output)
 
-    if (x == x2 && y == y2) { // maybe??
-      println("Fill Rectangle END");
+    if (x == x2 && y == y2) {
       return outputNew;
     } else {
       if (x < x2) {
@@ -401,15 +409,23 @@ class Draw {
     val x_corrected = x + BOUNDING_BOX.x_origo
     val y_corrected = y + BOUNDING_BOX.y_origo
 
-    if (x_corrected >= BOUNDING_BOX.x_origo &
-        x_corrected <= BOUNDING_BOX.x_end &
-        y_corrected >= BOUNDING_BOX.y_origo &
-        y_corrected <= BOUNDING_BOX.y_end) {
+    if (CheckWithinBoundingBox(x_corrected, y_corrected)) {
       outputNew = outputNew :+ x_corrected.toString
       outputNew = outputNew :+ y_corrected.toString
       println("(" + x_corrected + ", " + y_corrected + ")");
     } // 4 checks?
     return outputNew
+  }
+
+  private def CheckWithinBoundingBox(x: Int, y: Int): Boolean = {
+    if (x >= BOUNDING_BOX.x_origo &
+        x <= BOUNDING_BOX.x_end &
+        y >= BOUNDING_BOX.y_origo &
+        y <= BOUNDING_BOX.y_end) {
+      true
+    } else {
+      false
+    }
   }
 
   private def FillCircle(input: Array[String], output: Array[Array[String]]) : Array[Array[String]] = {
