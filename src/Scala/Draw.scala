@@ -404,10 +404,24 @@ class Draw {
     println("Radius: " + r)
     println("P: " + P)
 
+    var initialCircle = Array[String]()
+    initialCircle = initialCircle :+ (r + x1).toString;
+    initialCircle = initialCircle :+ (y1).toString;
+
+    if(r > 0){
+      initialCircle = initialCircle :+ (r + x1).toString
+      initialCircle = initialCircle :+ (-0 + y1).toString
+      initialCircle = initialCircle :+ (0 + x1).toString
+      initialCircle = initialCircle :+ (r + y1).toString
+      initialCircle = initialCircle :+ (-0 + x1).toString
+      initialCircle =initialCircle :+ (r + y1).toString
+    }
+
     val area = FillCircleImple(x1, y1, r, P, Array.empty)
 
     var outputNew = Array(colour)
 
+    outputNew = outputNew ++ initialCircle
     outputNew = outputNew ++ area
 
     println("COmplete CIRCLE")
