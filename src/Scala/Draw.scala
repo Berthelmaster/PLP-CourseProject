@@ -6,7 +6,7 @@ class Draw {
   val DRAW_END_SIGN = "DRAW_END"
   val DEFAULT_COLOUR_BLACK = "black"
   var highlightedObject: Array[String] = Array.empty
-  val SCALING = 16
+  val SCALING = (16 * 5)
 
   def DrawShape(input: String): Array[Array[String]] = {
     val inputNew = input + " " + END_SIGN;
