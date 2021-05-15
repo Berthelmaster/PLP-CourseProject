@@ -36,7 +36,10 @@ class Draw {
       if (!allowedColours.contains(tail.head)) throw new ColourException("Colour Not Allowed");
       else DrawColourObjects(tail.tail, output, tail.head)
     }
-    case "FILL" => DrawFill(tail, output)
+    case "FILL" => {
+      if (!allowedColours.contains(tail.head)) throw new ColourException("Colour Not Allowed");
+      else DrawFill(tail, output, tail.head)
+    }
     case _ => println("String completed"); println("output size: " + output.length); output.foreach(arr => arr.foreach(str => println(str + " "))); return output;
   }
 
@@ -344,19 +347,16 @@ class Draw {
     case _ => println("DRAW error"); return  output
   }
 
-  private def DrawFill(input: Array[String], output: Array[Array[String]]): Array[Array[String]] = input.tail.head match {
-    //case "LINE" => DrawLine(tail, output) // how to handle colour? input.head in colour param? yes
-    case "RECTANGLE" => FillRectangle(input, output)
-    case "CIRCLE" => FillCircle(input, output)
-    //case "CIRCLE" => DrawCircle(tail, output)
+  private def DrawFill(input: Array[String], output: Array[Array[String]], colour: String): Array[Array[String]] = input.tail.head match {
+    case "RECTANGLE" => FillRectangle(input, output, colour)
+    case "CIRCLE" => FillCircle(input, output, colour)
     case _ => output // error state
 
     return output
   }
 
-  private def FillRectangle(input: Array[String], output: Array[Array[String]]): Array[Array[String]] = {
+  private def FillRectangle(input: Array[String], output: Array[Array[String]], colour: String): Array[Array[String]] = {
     // input = ["Red", "RECTANGLE", "2", "1", "3","4"]
-    val colour = input.head;
     val x1 = ScaleCoordinate(input.tail.tail.head.toInt)
     val y1 = ScaleCoordinate(input.tail.tail.tail.head.toInt)
     val x2 = ScaleCoordinate(input.tail.tail.tail.tail.head.toInt)
@@ -388,11 +388,10 @@ class Draw {
     }
   }
 
-  private def FillCircle(input: Array[String], output: Array[Array[String]]) : Array[Array[String]] = {
+  private def FillCircle(input: Array[String], output: Array[Array[String]], colour: String) : Array[Array[String]] = {
 
     println("FillCircle Started")
 
-    val colour = input.head;
     val x1 = ScaleCoordinate(input.tail.tail.head.toInt)
     val y1 = ScaleCoordinate(input.tail.tail.tail.head.toInt)
     val r = ScaleRadius(input.tail.tail.tail.tail.head.toInt)
