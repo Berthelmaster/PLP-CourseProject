@@ -212,12 +212,10 @@ class Draw {
   }
 
   private def MidPointCircleAlgorithm(x_center: Int, y_center: Int, r: Int, y_temp: Int, P: Int, output: Array[String]): Array[String] = {
+    var outputNew = output
     var r_val = r
     var p_new = P
     val val_y_temp = y_temp + 1
-    //Add one to yy
-
-    println("Midpointcircle print:")
 
     if(p_new <= 0){
       p_new = p_new + 2 * val_y_temp + 1
@@ -228,17 +226,17 @@ class Draw {
     }
 
     if(r_val < y_temp){
-      return output
+      return outputNew
     }
 
-    output :+ r_val + x_center
-    output :+ val_y_temp+y_center
-    output :+ -r_val + x_center
-    output :+ val_y_temp + y_center
-    output :+ r_val + x_center
-    output :+ -val_y_temp + y_center
-    output :+ -r_val + x_center
-    output :+ -val_y_temp + y_center
+    outputNew = outputNew :+ (r_val + x_center).toString
+    outputNew = outputNew :+ (val_y_temp+y_center).toString
+    outputNew = outputNew :+ (-r_val + x_center).toString
+    outputNew = outputNew :+ (val_y_temp + y_center).toString
+    outputNew = outputNew :+ (r_val + x_center).toString
+    outputNew = outputNew :+ (-val_y_temp + y_center).toString
+    outputNew = outputNew :+ (-r_val + x_center).toString
+    outputNew = outputNew :+ (-val_y_temp + y_center).toString
 
 
     println("(" + (r_val + x_center) + ", " + (val_y_temp+y_center) + ")")
@@ -252,14 +250,14 @@ class Draw {
     println("BREAK")
 
     if(r_val != val_y_temp){
-      output :+ val_y_temp + x_center
-      output :+ r_val + y_center
-      output :+ -val_y_temp + x_center
-      output :+ r_val + y_center
-      output :+ val_y_temp + x_center
-      output :+ -r_val + y_center
-      output :+ -val_y_temp + x_center
-      output :+ -r_val + y_center
+      outputNew = outputNew :+ (val_y_temp + x_center).toString
+      outputNew = outputNew :+ (r_val + y_center).toString
+      outputNew = outputNew :+ (-val_y_temp + x_center).toString
+      outputNew = outputNew :+ (r_val + y_center).toString
+      outputNew = outputNew :+ (val_y_temp + x_center).toString
+      outputNew = outputNew :+ (-r_val + y_center).toString
+      outputNew = outputNew :+ (-val_y_temp + x_center).toString
+      outputNew = outputNew :+ (-r_val + y_center).toString
 
       println("(" + (val_y_temp + x_center)
         + ", " + (r_val + y_center) + ")")
@@ -271,7 +269,8 @@ class Draw {
         + ", " + (-r_val + y_center) +")")
     }
 
-    MidPointCircleAlgorithm(x_center, y_center, r_val,val_y_temp, p_new, output)
+
+    MidPointCircleAlgorithm(x_center, y_center, r_val,val_y_temp, p_new, outputNew)
     //val outputNew = output :+ p_new.toString
     /*
     if(r_val > val_y_temp) {
