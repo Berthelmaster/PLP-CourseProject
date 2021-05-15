@@ -243,7 +243,7 @@ class Draw {
   }
 
   private def DrawFill(input: Array[String], output: Array[Array[String]]): Array[Array[String]] = input.tail.head match {
-    //case "LINE" => DrawLine(tail, output)
+    //case "LINE" => DrawLine(tail, output) // how to handle colour? input.head in colour param? yes
     case "RECTANGLE" => FillRectangle(input, output)
     //case "CIRCLE" => DrawCircle(tail, output)
     //case "TEXT-AT" => DrawText(tail, output)
