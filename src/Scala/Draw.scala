@@ -305,12 +305,17 @@ class Draw {
     val x = input.head;
     val y = input.tail.head;
 
+    var textOutput = Array.empty[String]
     val textBeginning = Array(x, y, input.tail.tail.head);
     val textAndNext = DrawTextImpl(input.tail.tail.tail, textBeginning);
-    val textOutput = Array("black") ++ textAndNext.head;
+
+    var outputNew = output
+    if (CheckWithinBoundingBox(x.toInt, y.toInt)) {
+      outputNew :+ (textOutput = Array("black") ++ textAndNext.head);
+    }
 
     val nextCommand = textAndNext.tail.head;
-    return DrawFromString(nextCommand.head, nextCommand.tail, output:+ textOutput);
+    return DrawFromString(nextCommand.head, nextCommand.tail, outputNew);
   }
 
   private def DrawColoredText(input: Array[String], output: Array[Array[String]], colour: String): Array[Array[String]] = {
@@ -320,13 +325,18 @@ class Draw {
 
     val textBeginning = Array(x, y, input.tail.tail.head);
     val textAndNext = DrawTextImpl(input.tail.tail.tail, textBeginning);
-    val textOutput = Array(colour) ++ textAndNext.head;
+//    val textOutput = Array(colour) ++ textAndNext.head;
+
+    var outputNew = output
+    if (CheckWithinBoundingBox(x.toInt, y.toInt)) {
+      outputNew :+  Array(colour) ++ textAndNext.head;
+    }
 
     val nextCommand = textAndNext.tail.head;
     if (nextCommand.head.equals(DRAW_END_SIGN)) {
-      return DrawFromString(nextCommand.head, nextCommand.tail, output :+ textOutput);
+      return DrawFromString(nextCommand.head, nextCommand.tail, outputNew);
     } else {
-      return DrawColourObjects(nextCommand, output :+ textOutput, colour)
+      return DrawColourObjects(nextCommand, outputNew, colour)
     }
   }
 
