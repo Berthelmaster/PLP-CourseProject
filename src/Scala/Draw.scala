@@ -11,12 +11,14 @@ class Draw {
   case class Fill() extends DrawShapes
 
 
-  val testInputLine = "(FILL RED (RECTANGLE (1 1) (3 3)))"
-  val endSign = "END"
+  val testInputLine = "(LINE (1 1) (3 1)) (DRAW red (RECTANGLE (1 1) (3 3)) (RECTANGLE (1 1) (2 2)) (RECTANGLE (1 1) (4 4))) (LINE (1 1) (3 1))"
+  val END_SIGN = "END"
+  val DRAW_END_SIGN = "DRAW_END"
+  val DEFAULT_COLOUR_BLACK = "black"
 
   def DrawShape(input: String): Array[Array[String]] = {
-    val inputNew = input + " " + endSign;
-    val testInputLine = this.testInputLine + " " + endSign;
+    val inputNew = input + " " + END_SIGN;
+    val testInputLine = this.testInputLine + " " + END_SIGN;
     val arguments = FilterInput(testInputLine) //use inputNew here
     val head = arguments.head
     val tail = arguments.tail
@@ -27,10 +29,6 @@ class Draw {
     // Figure out what class to call
     val outputArrayOfStringArrays = Array.empty[Array[String]];
     return DrawFromString(head, tail, outputArrayOfStringArrays)
-
-    // STOP
-
-    //new Array[String]('2')
   }
 
   def DrawFromString(head: String, tail: Array[String], output: Array[Array[String]]): Array[Array[String]] = head match {
@@ -39,12 +37,12 @@ class Draw {
     case "CIRCLE" => DrawCircle(tail, output)
     case "TEXT-AT" => DrawText(tail, output)
     case "BOUNDING-BOX" => DrawBounding(tail, output)
-    case "DRAW" => DrawObject(tail, output)
+    case "DRAW" => DrawColourObjects(tail.tail, output, tail.head)
     case "FILL" => DrawFill(tail, output)
-    case _ => println("String completed"); output.foreach(arr => arr.foreach(str => println(str + " "))); return output;
+    case _ => println("String completed"); println("output size: " + output.length); output.foreach(arr => arr.foreach(str => println(str + " "))); return output;
   }
 
-  def DrawLine(input: Array[String], output: Array[Array[String]]): Array[Array[String]] = {
+  def DrawLine(input: Array[String], output: Array[Array[String]], colour: String = DEFAULT_COLOUR_BLACK): Array[Array[String]] = {
     println("LINE MATCHED")
     val x0 = input.head.toInt;
     val y0 = input.tail.head.toInt;
@@ -53,11 +51,11 @@ class Draw {
     val nextCommand = input.tail.tail.tail.tail;
 
     //Bresenham recursively
-    val colour = "black"; // get from params
     val lineStart = Array(colour);
     val line = BresenhamsAlgorithm(x0, y0, x1, y1, lineStart);
 
-    return DrawFromString(nextCommand.head, nextCommand.tail, output:+ line);
+    // return DrawFromString(nextCommand.head, nextCommand.tail, output:+ line);
+    AddShapeAndDecideNextDrawMethod(nextCommand, line, output, colour)
   }
 
   // Recursive version based on:  https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm
@@ -112,7 +110,6 @@ class Draw {
       println("Brensenham LOW END");
       return outputNew;
     }
-
   }
 
   def BresenhamLineHigh(x0: Int, y0: Int, x1: Int, y1: Int, output: Array[String]): Array[String] = {
@@ -149,8 +146,10 @@ class Draw {
     }
   }
 
-  def DrawRectangle(input: Array[String], output: Array[Array[String]]): Array[Array[String]] = {
+  def DrawRectangle(input: Array[String], output: Array[Array[String]], colour: String = DEFAULT_COLOUR_BLACK): Array[Array[String]] = {
     println("RECTANGLE matched");
+    println("(" + input.head + ", " + input.tail.head + ")");
+    println("(" + input.tail.tail.head + ", " + input.tail.tail.tail.head + ")");
 
     val x0 = input.head.toInt;
     val y0 = input.tail.head.toInt;
@@ -158,14 +157,21 @@ class Draw {
     val y1 = input.tail.tail.tail.head.toInt;
     val nextCommand = input.tail.tail.tail.tail;
 
-    val colour = "black"; // get from params
     val lineStart = Array(colour);
     val leftLine = BresenhamsAlgorithm(x0, y0, x0, y1, lineStart);
     val topLineAdded = BresenhamsAlgorithm(x0+1, y1, x1, y1, leftLine);
     val rightLineAdded = BresenhamsAlgorithm(x1, y1-1, x1, y0, topLineAdded);
     val bottomLineAdded = BresenhamsAlgorithm(x1-1, y0, x0+1, y0, rightLineAdded);
 
-    return DrawFromString(nextCommand.head, nextCommand.tail, output:+ bottomLineAdded);
+    AddShapeAndDecideNextDrawMethod(nextCommand, bottomLineAdded, output, colour)
+  }
+
+  private def AddShapeAndDecideNextDrawMethod(input: Array[String], newShape: Array[String], output: Array[Array[String]], colour: String = DEFAULT_COLOUR_BLACK): Array[Array[String]] = {
+    if (colour != DEFAULT_COLOUR_BLACK | input.head == DRAW_END_SIGN) {
+      return DrawColourObjects(input, output :+ newShape, colour)
+    } else {
+      return DrawFromString(input.head, input.tail, output:+ newShape)
+    }
   }
 
   private def DrawCircle(arr: Array[String], output: Array[Array[String]]): Array[Array[String]] = {
@@ -283,15 +289,24 @@ class Draw {
     // draw rectangle?
 
     // set global bound box start pixel
+    // In pixel drawing algorithmes, make check to see if out of bound, before adding them to the array
+
     return output
   }
 
-  private def DrawObject(arr: Array[String], output: Array[Array[String]]): Array[Array[String]] = {
-    return output
+  private def DrawColourObjects(input: Array[String], output: Array[Array[String]], colour: String): Array[Array[String]] = input.head match {
+    // output when done wiht DRAW all shapes in one string[] = ["red", 1, 2, 1, 2, 1, 2, 1, 2, 1, 2] <- containing two shapes
+
+    case "LINE" => DrawLine(input.tail, output, colour)
+    case "RECTANGLE" => DrawRectangle(input.tail, output, colour)
+    //case "CIRCLE" => DrawCircle(tail, output)
+    //case "TEXT-AT" => DrawText(tail, output)
+    case DRAW_END_SIGN => println("DRAW completed completed"); DrawFromString(input.tail.head, input.tail.tail, output);
+    case _ => println("DRAW error"); return  output
   }
 
   private def DrawFill(input: Array[String], output: Array[Array[String]]): Array[Array[String]] = input.tail.head match {
-    //case "LINE" => DrawLine(tail, output)
+    //case "LINE" => DrawLine(tail, output) // how to handle colour? input.head in colour param? yes
     case "RECTANGLE" => FillRectangle(input, output)
     case "CIRCLE" => FillCircle(input, output)
     //case "CIRCLE" => DrawCircle(tail, output)
@@ -359,8 +374,9 @@ class Draw {
   }
 
   def FilterInput(input: String): Array[String] = {
-    val t = input.split(Array('(', ')', ' '))
-    t.filter(_.nonEmpty)
+    val input_string = input.replace(")))", " " + DRAW_END_SIGN + " ")
+    val input_array = input_string.split(Array('(', ')', ' '))
+    input_array.filter(_.nonEmpty)
   }
 
 
