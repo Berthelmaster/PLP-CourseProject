@@ -5,6 +5,7 @@ class Draw {
   val END_SIGN = "END"
   val DRAW_END_SIGN = "DRAW_END"
   val DEFAULT_COLOUR_BLACK = "black"
+  var highlightedObject: Array[String] = Array.empty
 
   def DrawShape(input: String): Array[Array[String]] = {
     val inputNew = input + " " + END_SIGN;
@@ -18,10 +19,9 @@ class Draw {
     println("DrawShape")
     // Figure out what class to call
     val outputArrayOfStringArrays = Array.empty[Array[String]];
-    return DrawFromString(head, tail, outputArrayOfStringArrays)
+    val output = DrawFromString(head, tail, outputArrayOfStringArrays);
+    return HighlightLastObject(output);
   }
-
-
 
   def DrawFromString(head: String, tail: Array[String], output: Array[Array[String]]): Array[Array[String]] = head match {
     case "LINE" => DrawLine(tail, output)
@@ -228,7 +228,7 @@ class Draw {
     outputNew = outputNew :+ (-r_val + x_center).toString
     outputNew = outputNew :+ (-val_y_temp + y_center).toString
 
-
+/*
     println("(" + (r_val + x_center) + ", " + (val_y_temp+y_center) + ")")
     println("(" + (-r_val + x_center)
       + ", " + (val_y_temp + y_center) + ")")
@@ -236,6 +236,8 @@ class Draw {
       ", " + (-val_y_temp + y_center) + ")")
     println("(" + (-r_val + x_center)
       + ", " + (-val_y_temp + y_center) + ")")
+
+ */
 
     println("BREAK")
 
@@ -249,6 +251,7 @@ class Draw {
       outputNew = outputNew :+ (-val_y_temp + x_center).toString
       outputNew = outputNew :+ (-r_val + y_center).toString
 
+      /*
       println("(" + (val_y_temp + x_center)
         + ", " + (r_val + y_center) + ")")
       println("(" + (-val_y_temp + x_center)
@@ -257,6 +260,8 @@ class Draw {
         + ", " + (-r_val + y_center) + ")")
       println("(" + (-val_y_temp + x_center)
         + ", " + (-r_val + y_center) +")")
+
+       */
     }
 
 
@@ -389,23 +394,72 @@ class Draw {
     val P = 1-r
     val nextCommand = input.tail.tail.tail.tail.tail
 
-    val shape = MidPointCircleAlgorithm(x1, y1, r,0, P, Array.empty)
+    println("x_center: " + x1)
+    println("y_center: " + y1)
+    println("Radius: " + r)
+    println("P: " + P)
 
-    println("Print values")
-    println(shape.mkString(" , "))
+    var initialCircle = Array[String]()
+    initialCircle = initialCircle :+ (r + x1).toString;
+    initialCircle = initialCircle :+ (y1).toString;
 
-    output:+ colour
-    output:+ shape
+    if(r > 0){
+      initialCircle = initialCircle :+ (r + x1).toString
+      initialCircle = initialCircle :+ (-0 + y1).toString
+      initialCircle = initialCircle :+ (0 + x1).toString
+      initialCircle = initialCircle :+ (r + y1).toString
+      initialCircle = initialCircle :+ (-0 + x1).toString
+      initialCircle =initialCircle :+ (r + y1).toString
+    }
+
+    val area = FillCircleImple(x1, y1, r, P, Array.empty)
+
+    var outputNew = Array(colour)
+
+    outputNew = outputNew ++ initialCircle
+    outputNew = outputNew ++ area
+
+    println("COmplete CIRCLE")
+    println(outputNew.mkString(","))
+    println(outputNew.length)
 
     println("FillCircle End")
 
-    DrawFromString(nextCommand.head, nextCommand.tail, output)
+    DrawFromString(nextCommand.head, nextCommand.tail, output:+ outputNew)
   }
+
+  private def FillCircleImple(x_center: Int, y_center: Int, r: Int, P: Int, output: Array[String]) : Array[String] = {
+    var outputNew = output
+
+    if(r == 0){
+      return outputNew
+    }
+
+    var circleValues = MidPointCircleAlgorithm(x_center, y_center, r, 0, P, Array.empty)
+
+    outputNew = outputNew ++ circleValues
+
+    val new_r = r - 1;
+
+    FillCircleImple(x_center, y_center, new_r, P, outputNew)
+  }
+
+
 
   def FilterInput(input: String): Array[String] = {
     val input_string = input.replace(")))", " " + DRAW_END_SIGN + " ")
     val input_array = input_string.split(Array('(', ')', ' '))
     input_array.filter(_.nonEmpty)
+  }
+
+  private def HighlightLastObject(output: Array[Array[String]]): Array[Array[String]] = {
+    if (output.isEmpty) return output
+    else {
+      var updatedOutput = output;
+      if (highlightedObject.length != 0) updatedOutput = updatedOutput :+ highlightedObject;
+      highlightedObject = output.last;
+      return updatedOutput :+ ("magenta" +: output.last.tail);
+    }
   }
 }
 
