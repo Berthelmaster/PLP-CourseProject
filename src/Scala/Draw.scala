@@ -1,21 +1,14 @@
 package Scala
 
 class Draw {
-  sealed abstract class DrawShapes
-  case class Line() extends DrawShapes
-  case class Rectangle() extends DrawShapes
-  case class Circle() extends DrawShapes
-  case class Text() extends DrawShapes
-  case class BoundingBox() extends DrawShapes
-  case class DrawObjects() extends DrawShapes
-  case class Fill() extends DrawShapes
-
   val allowedColours: Array[String] = Array("white", "lightGray", "gray", "darkGray", "black", "red", "pink", "orange", "yellow", "green", "magenta", "cyan", "blue");
   val testInputLine = "(LINE (100 100) (300 100)) (DRAW red (RECTANGLE (100 100) (300 300)) (RECTANGLE (100 100) (200 200)) (RECTANGLE (100 100) (400 400))) (LINE (100 100) (300 100))"
   val END_SIGN = "END"
   val DRAW_END_SIGN = "DRAW_END"
   val DEFAULT_COLOUR_BLACK = "black"
   var highlightedObject: Array[String] = Array.empty
+  val SCALING = 16
+  val SCALING_OFFSET = SCALING * 5
 
   def DrawShape(input: String): Array[Array[String]] = {
     val inputNew = input + " " + END_SIGN;
@@ -49,10 +42,10 @@ class Draw {
 
   def DrawLine(input: Array[String], output: Array[Array[String]], colour: String = DEFAULT_COLOUR_BLACK): Array[Array[String]] = {
     println("LINE MATCHED")
-    val x0 = input.head.toInt;
-    val y0 = input.tail.head.toInt;
-    val x1 = input.tail.tail.head.toInt;
-    val y1 = input.tail.tail.tail.head.toInt;
+    val x0 = ScaleCoordinate(input.head.toInt)
+    val y0 = ScaleCoordinate(input.tail.head.toInt)
+    val x1 = ScaleCoordinate(input.tail.tail.head.toInt)
+    val y1 = ScaleCoordinate(input.tail.tail.tail.head.toInt)
     val nextCommand = input.tail.tail.tail.tail;
 
     //Bresenham recursively
@@ -156,11 +149,11 @@ class Draw {
     println("(" + input.head + ", " + input.tail.head + ")");
     println("(" + input.tail.tail.head + ", " + input.tail.tail.tail.head + ")");
 
-    val x0 = input.head.toInt;
-    val y0 = input.tail.head.toInt;
-    val x1 = input.tail.tail.head.toInt;
-    val y1 = input.tail.tail.tail.head.toInt;
-    val nextCommand = input.tail.tail.tail.tail;
+    val x0 = ScaleCoordinate(input.head.toInt)
+    val y0 = ScaleCoordinate(input.tail.head.toInt)
+    val x1 = ScaleCoordinate(input.tail.tail.head.toInt)
+    val y1 = ScaleCoordinate(input.tail.tail.tail.head.toInt)
+    val nextCommand = input.tail.tail.tail.tail
 
     val lineStart = Array(colour);
     val leftLine = BresenhamsAlgorithm(x0, y0, x0, y1, lineStart);
@@ -181,54 +174,121 @@ class Draw {
 
   private def DrawCircle(arr: Array[String], output: Array[Array[String]]): Array[Array[String]] = {
     // Mid-Point Circle Drawing Algorithm - https://www.geeksforgeeks.org/mid-point-circle-drawing-algorithm
-    val r = arr.tail.tail.head.toInt
-    val x = r
-    val y = 0
+    val x_center = ScaleCoordinate(arr.head.toInt)
+    val y_center = ScaleCoordinate(arr.tail.head.toInt)
+    val r = ScaleRadius(arr.tail.tail.head.toInt)
+    println("This is r: " + r)
     val P = 1 - r
+    val nextCommand = arr.tail.tail.tail;
+    //println("Printing next command:" + nextCommand.toString)
+
+    val colour = "black";
+    var CircleArray = Array(colour);
+
+    // Initial Point
+
+    CircleArray :+ (r + x_center).toString;
+    CircleArray :+ (y_center).toString;
+
+    if(r > 0){
+      CircleArray :+ (r + x_center).toString
+      CircleArray :+ (-0 + y_center).toString
+      CircleArray :+ (0 + x_center).toString
+      CircleArray :+ (r + y_center).toString
+      CircleArray :+ (-0 + x_center).toString
+      CircleArray :+ (r + y_center).toString
+    }
 
 
-    val out = MidPointCircleAlgorithm(x,y,r,P,Array.empty)
+    val out = MidPointCircleAlgorithm(x_center,y_center,r,0,P,CircleArray)
 
-    output :+ out
+    CircleArray = out
 
-    val buffer = arr.toBuffer
-    buffer.remove(0,2)
-    val newArr = buffer.toArray
-
-    val newHead = newArr.head
-
-    DrawFromString(newHead, newArr, output)
+    DrawFromString(nextCommand.head, nextCommand.tail, output:+ CircleArray)
   }
 
-  private def MidPointCircleAlgorithm(x: Int, y: Int, r: Int, P: Int, output: Array[String]): Array[String] = {
-    val y_new = y + 1
+  private def MidPointCircleAlgorithm(x_center: Int, y_center: Int, r: Int, y_temp: Int, P: Int, output: Array[String]): Array[String] = {
+    var outputNew = output
+    var r_val = r
     var p_new = P
-    var x_new = x
+    val val_y_temp = y_temp + 1
 
     if(p_new <= 0){
-      p_new = p_new+2*y+1
+      p_new = p_new + 2 * val_y_temp + 1
     }
     else{
-      x_new = x_new-1
-      p_new = P+2*y-2*x+1
+      r_val = r_val - 1
+      p_new = p_new + 2 * val_y_temp - 2 * r_val + 1
     }
 
-    val outputNew = output :+ p_new.toString
-
-    if(x < y) {
-      return MidPointCircleAlgorithm(x_new, y_new, r, p_new, outputNew)
-    }
-    else { // if (x != y), otherwise there might be no return, resulting in return type being Unit
+    if(r_val < y_temp){
       return outputNew
     }
+
+    outputNew = outputNew :+ (r_val + x_center).toString
+    outputNew = outputNew :+ (val_y_temp+y_center).toString
+    outputNew = outputNew :+ (-r_val + x_center).toString
+    outputNew = outputNew :+ (val_y_temp + y_center).toString
+    outputNew = outputNew :+ (r_val + x_center).toString
+    outputNew = outputNew :+ (-val_y_temp + y_center).toString
+    outputNew = outputNew :+ (-r_val + x_center).toString
+    outputNew = outputNew :+ (-val_y_temp + y_center).toString
+
+/*
+    println("(" + (r_val + x_center) + ", " + (val_y_temp+y_center) + ")")
+    println("(" + (-r_val + x_center)
+      + ", " + (val_y_temp + y_center) + ")")
+    println("(" + (r_val + x_center) +
+      ", " + (-val_y_temp + y_center) + ")")
+    println("(" + (-r_val + x_center)
+      + ", " + (-val_y_temp + y_center) + ")")
+
+ */
+
+    println("BREAK")
+
+    if(r_val != val_y_temp){
+      outputNew = outputNew :+ (val_y_temp + x_center).toString
+      outputNew = outputNew :+ (r_val + y_center).toString
+      outputNew = outputNew :+ (-val_y_temp + x_center).toString
+      outputNew = outputNew :+ (r_val + y_center).toString
+      outputNew = outputNew :+ (val_y_temp + x_center).toString
+      outputNew = outputNew :+ (-r_val + y_center).toString
+      outputNew = outputNew :+ (-val_y_temp + x_center).toString
+      outputNew = outputNew :+ (-r_val + y_center).toString
+
+      /*
+      println("(" + (val_y_temp + x_center)
+        + ", " + (r_val + y_center) + ")")
+      println("(" + (-val_y_temp + x_center)
+        + ", " + (r_val + y_center) + ")")
+      println("(" + (val_y_temp + x_center)
+        + ", " + (-r_val + y_center) + ")")
+      println("(" + (-val_y_temp + x_center)
+        + ", " + (-r_val + y_center) +")")
+
+       */
+    }
+
+
+    MidPointCircleAlgorithm(x_center, y_center, r_val,val_y_temp, p_new, outputNew)
+    //val outputNew = output :+ p_new.toString
+    /*
+    if(r_val > val_y_temp) {
+      MidPointCircleAlgorithm(x_center, y_center, r_val,val_y_temp, p_new, outputNew)
+    }
+    else { // if (x != y), otherwise there might be no return, resulting in return type being Unit
+      outputNew
+    }
+     */
   }
 
   private def DrawText(input: Array[String], output: Array[Array[String]]): Array[Array[String]] = {
     // input = ["2", "1", "test","tekst","woop","END"]
-    val x = input.head;
-    val y = input.tail.head;
+    val x = ScaleCoordinate(input.head.toInt)
+    val y = ScaleCoordinate(input.tail.head.toInt)
 
-    val textBeginning = Array(x, y, input.tail.tail.head);
+    val textBeginning = Array(x.toString, y.toString, input.tail.tail.head);
     val textAndNext = DrawTextImpl(input.tail.tail.tail, textBeginning);
     val textOutput = Array("black") ++ textAndNext.head;
 
@@ -238,10 +298,10 @@ class Draw {
 
   private def DrawColoredText(input: Array[String], output: Array[Array[String]], colour: String): Array[Array[String]] = {
     // input = ["2", "1", "test","tekst","woop","END"]
-    val x = input.head;
-    val y = input.tail.head;
+    val x = ScaleCoordinate(input.head.toInt)
+    val y = ScaleCoordinate(input.tail.head.toInt)
 
-    val textBeginning = Array(x, y, input.tail.tail.head);
+    val textBeginning = Array(x.toString, y.toString, input.tail.tail.head);
     val textAndNext = DrawTextImpl(input.tail.tail.tail, textBeginning);
     val textOutput = Array(colour) ++ textAndNext.head;
 
@@ -285,8 +345,9 @@ class Draw {
   }
 
   private def DrawFill(input: Array[String], output: Array[Array[String]]): Array[Array[String]] = input.tail.head match {
-    //case "LINE" => DrawLine(tail, output)
+    //case "LINE" => DrawLine(tail, output) // how to handle colour? input.head in colour param? yes
     case "RECTANGLE" => FillRectangle(input, output)
+    case "CIRCLE" => FillCircle(input, output)
     //case "CIRCLE" => DrawCircle(tail, output)
     case _ => output // error state
 
@@ -296,11 +357,11 @@ class Draw {
   private def FillRectangle(input: Array[String], output: Array[Array[String]]): Array[Array[String]] = {
     // input = ["Red", "RECTANGLE", "2", "1", "3","4"]
     val colour = input.head;
-    val x1 = input.tail.tail.head.toInt;
-    val y1 = input.tail.tail.tail.head.toInt;
-    val x2 = input.tail.tail.tail.tail.head.toInt;
-    val y2 = input.tail.tail.tail.tail.tail.head.toInt;
-    val nextCommand = input.tail.tail.tail.tail.tail.tail;
+    val x1 = ScaleCoordinate(input.tail.tail.head.toInt)
+    val y1 = ScaleCoordinate(input.tail.tail.tail.head.toInt)
+    val x2 = ScaleCoordinate(input.tail.tail.tail.tail.head.toInt)
+    val y2 = ScaleCoordinate(input.tail.tail.tail.tail.tail.head.toInt)
+    val nextCommand = input.tail.tail.tail.tail.tail.tail
     println("x2: " + x2 + " y2: " + y2)
     val shapeStart = Array(colour)
 
@@ -327,6 +388,69 @@ class Draw {
     }
   }
 
+  private def FillCircle(input: Array[String], output: Array[Array[String]]) : Array[Array[String]] = {
+
+    println("FillCircle Started")
+
+    val colour = input.head;
+    val x1 = ScaleCoordinate(input.tail.tail.head.toInt)
+    val y1 = ScaleCoordinate(input.tail.tail.tail.head.toInt)
+    val r = ScaleRadius(input.tail.tail.tail.tail.head.toInt)
+    val P = 1-r
+    val nextCommand = input.tail.tail.tail.tail.tail
+
+    println("x_center: " + x1)
+    println("y_center: " + y1)
+    println("Radius: " + r)
+    println("P: " + P)
+
+    var initialCircle = Array[String]()
+    initialCircle = initialCircle :+ (r + x1).toString;
+    initialCircle = initialCircle :+ (y1).toString;
+
+    if(r > 0){
+      initialCircle = initialCircle :+ (r + x1).toString
+      initialCircle = initialCircle :+ (-0 + y1).toString
+      initialCircle = initialCircle :+ (0 + x1).toString
+      initialCircle = initialCircle :+ (r + y1).toString
+      initialCircle = initialCircle :+ (-0 + x1).toString
+      initialCircle =initialCircle :+ (r + y1).toString
+    }
+
+    val area = FillCircleImple(x1, y1, r, P, Array.empty)
+
+    var outputNew = Array(colour)
+
+    outputNew = outputNew ++ initialCircle
+    outputNew = outputNew ++ area
+
+    println("COmplete CIRCLE")
+    println(outputNew.mkString(","))
+    println(outputNew.length)
+
+    println("FillCircle End")
+
+    DrawFromString(nextCommand.head, nextCommand.tail, output:+ outputNew)
+  }
+
+  private def FillCircleImple(x_center: Int, y_center: Int, r: Int, P: Int, output: Array[String]) : Array[String] = {
+    var outputNew = output
+
+    if(r == 0){
+      return outputNew
+    }
+
+    var circleValues = MidPointCircleAlgorithm(x_center, y_center, r, 0, P, Array.empty)
+
+    outputNew = outputNew ++ circleValues
+
+    val new_r = r - 1;
+
+    FillCircleImple(x_center, y_center, new_r, P, outputNew)
+  }
+
+
+
   def FilterInput(input: String): Array[String] = {
     val input_string = input.replace(")))", " " + DRAW_END_SIGN + " ")
     val input_array = input_string.split(Array('(', ')', ' '))
@@ -341,6 +465,14 @@ class Draw {
       highlightedObject = output.last;
       return updatedOutput :+ ("magenta" +: output.last.tail);
     }
+  }
+
+  private def ScaleCoordinate(coordinate: Int): Int = {
+    (coordinate * SCALING) + SCALING_OFFSET
+  }
+
+  private def ScaleRadius(coordinate: Int): Int = {
+    coordinate * SCALING
   }
 }
 
