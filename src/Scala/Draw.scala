@@ -6,19 +6,22 @@ class Draw {
   case class Rectangle() extends DrawShapes
   case class Circle() extends DrawShapes
   case class Text() extends DrawShapes
-  case class BoundingBox() extends DrawShapes
+  //case class BoundingBox() extends DrawShapes
   case class DrawObjects() extends DrawShapes
   case class Fill() extends DrawShapes
 
+  class BoundingBox(var x_origo: Int, var y_origo: Int, var x_end: Int, var y_end: Int)
 
-  val testInputLine = "(LINE (100 100) (300 100)) (DRAW red (RECTANGLE (100 100) (300 300)) (RECTANGLE (100 100) (200 200)) (RECTANGLE (100 100) (400 400))) (LINE (100 100) (300 100))"
+
+  val testInputLine = "(BOUNDING-BOX (10 10) (30 30)) (FILL red (RECTANGLE (1 1) (3 3))" //(DRAW red (RECTANGLE (100 100) (300 300)) (RECTANGLE (100 100) (200 200)) (RECTANGLE (100 100) (400 400))) (LINE (100 100) (300 100))"
   val END_SIGN = "END"
   val DRAW_END_SIGN = "DRAW_END"
   val DEFAULT_COLOUR_BLACK = "black"
+  var BOUNDING_BOX = new BoundingBox(0, 0, 0, 0)
 
   def DrawShape(input: String): Array[Array[String]] = {
-    val inputNew = input + " " + END_SIGN;
-    val testInputLine = this.testInputLine + " " + END_SIGN;
+    //val inputNew = input + " " + END_SIGN;
+    val inputNew = this.testInputLine + " " + END_SIGN;
     val arguments = FilterInput(inputNew) //use inputNew here
     val head = arguments.head
     val tail = arguments.tail
@@ -29,6 +32,9 @@ class Draw {
     // Figure out what class to call
     val outputArrayOfStringArrays = Array.empty[Array[String]];
     return DrawFromString(head, tail, outputArrayOfStringArrays)
+    // method that takes returnArray.last and sets the colour to highlighted colour, or just yellow.
+    // Save last colour and array index
+    // Save latest generated array.
   }
 
   def DrawFromString(head: String, tail: Array[String], output: Array[Array[String]]): Array[Array[String]] = head match {
@@ -260,13 +266,19 @@ class Draw {
     }
   }
 
-  private def DrawBounding(arr: Array[String], output: Array[Array[String]]): Array[Array[String]] = {
+  private def DrawBounding(input: Array[String], output: Array[Array[String]]): Array[Array[String]] = {
     // draw rectangle?
 
     // set global bound box start pixel
     // In pixel drawing algorithmes, make check to see if out of bound, before adding them to the array
 
-    return output
+    val x_origo = input.head.toInt;
+    val y_origo = input.tail.head.toInt;
+    val x_end = input.tail.tail.head.toInt;
+    val y_end = input.tail.tail.tail.head.toInt;
+
+    BOUNDING_BOX = new BoundingBox(x_origo, y_origo, x_end, y_end)
+    return DrawRectangle(input, output)
   }
 
   private def DrawColourObjects(input: Array[String], output: Array[Array[String]], colour: String): Array[Array[String]] = input.head match {
@@ -306,21 +318,35 @@ class Draw {
   }
 
   private def FillRectangleImpl(x1_origin: Int, x: Int, y: Int, x2: Int, y2: Int, output: Array[String]): Array[String] = {
-    var outputNew = output;
-    outputNew = outputNew :+ x.toString;
-    outputNew = outputNew :+ y.toString;
-    println("(" + x + ", " + y + ")");
+    var outputNew = AddPixel(x, y, output)
 
     if (x == x2 && y == y2) { // maybe??
       println("Fill Rectangle END");
       return outputNew;
     } else {
       if (x < x2) {
-        FillRectangleImpl(x1_origin, x+1, y, x2, y2, outputNew)
+        FillRectangleImpl(x1_origin, x + 1, y, x2, y2, outputNew)
       } else {
-        FillRectangleImpl(x1_origin, x1_origin, y+1, x2, y2, outputNew)
+        FillRectangleImpl(x1_origin, x1_origin, y + 1, x2, y2, outputNew)
       }
     }
+  }
+
+  def AddPixel(x: Int, y: Int, output: Array[String]): Array[String] = {
+    var outputNew = output
+
+    val x_corrected = x + BOUNDING_BOX.x_origo
+    val y_corrected = y + BOUNDING_BOX.y_origo
+
+    if (x_corrected >= BOUNDING_BOX.x_origo &
+        x_corrected <= BOUNDING_BOX.x_end &
+        y_corrected >= BOUNDING_BOX.y_origo &
+        y_corrected <= BOUNDING_BOX.y_end) {
+      outputNew = outputNew :+ x_corrected.toString
+      outputNew = outputNew :+ y_corrected.toString
+      println("(" + x_corrected + ", " + y_corrected + ")");
+    } // 4 checks?
+    return outputNew
   }
 
   def FilterInput(input: String): Array[String] = {
