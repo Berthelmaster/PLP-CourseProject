@@ -172,7 +172,7 @@ class Draw {
     // Mid-Point Circle Drawing Algorithm - https://www.geeksforgeeks.org/mid-point-circle-drawing-algorithm
     val x_center = ScaleCoordinate(arr.head.toInt)
     val y_center = ScaleCoordinate(arr.tail.head.toInt)
-    val r = ScaleCoordinate(arr.tail.tail.head.toInt)
+    val r = ScaleRadius(arr.tail.tail.head.toInt)
     println("This is r: " + r)
     val P = 1 - r
     val nextCommand = arr.tail.tail.tail;
@@ -392,7 +392,7 @@ class Draw {
     val colour = input.head;
     val x1 = ScaleCoordinate(input.tail.tail.head.toInt)
     val y1 = ScaleCoordinate(input.tail.tail.tail.head.toInt)
-    val r = ScaleCoordinate(input.tail.tail.tail.tail.head.toInt)
+    val r = ScaleRadius(input.tail.tail.tail.tail.head.toInt)
     val P = 1-r
     val nextCommand = input.tail.tail.tail.tail.tail
 
@@ -465,7 +465,11 @@ class Draw {
   }
 
   private def ScaleCoordinate(coordinate: Int): Int = {
-    coordinate * SCALING + SCALING_OFFSET
+    (coordinate * SCALING) + SCALING_OFFSET
+  }
+
+  private def ScaleRadius(coordinate: Int): Int = {
+    coordinate * SCALING
   }
 }
 
