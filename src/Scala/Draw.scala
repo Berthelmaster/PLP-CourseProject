@@ -13,8 +13,8 @@ class Draw {
   var BOUNDING_BOX = new BoundingBox(0, 0, 0, 0)
 
   def DrawShape(input: String): Array[Array[String]] = {
-    //val inputNew = input + " " + END_SIGN;
-    val inputNew = this.testInputLine + " " + END_SIGN;
+    val inputNew = input + " " + END_SIGN;
+    //val inputNew = this.testInputLine + " " + END_SIGN;
     val arguments = FilterInput(inputNew) //use inputNew here
     val head = arguments.head
     val tail = arguments.tail
