@@ -3,7 +3,7 @@ package Scala
 class Draw {
   class BoundingBox(var x_origo: Int, var y_origo: Int, var x_end: Int, var y_end: Int)
 
-  val testInputLine = "(LINE (10 10) (30 10)) (DRAW red (RECTANGLE (10 10) (30 30)) (RECTANGLE (10 10) (20 20)) (RECTANGLE (10 10) (40 40))) (LINE (10 10) (30 10))"
+  val testInputLine = "(BOUNDING-BOX (1 1) (50 50)) (LINE (10 10) (30 10)) (DRAW red (RECTANGLE (10 10) (30 30)) (RECTANGLE (10 10) (20 20)) (RECTANGLE (10 10) (40 40))) (LINE (10 10) (30 10))"
   val END_SIGN = "END"
   val DRAW_END_SIGN = "DRAW_END"
   val DEFAULT_COLOUR_BLACK = "black"
@@ -352,10 +352,10 @@ class Draw {
   }
 
   private def DrawBounding(input: Array[String], output: Array[Array[String]]): Array[Array[String]] = {
-    val x_origo = input.head.toInt;
-    val y_origo = input.tail.head.toInt;
-    val x_end = input.tail.tail.head.toInt;
-    val y_end = input.tail.tail.tail.head.toInt;
+    val x_origo = ScaleCoordinate(input.head.toInt)
+    val y_origo = ScaleCoordinate(input.tail.head.toInt)
+    val x_end = ScaleCoordinate(input.tail.tail.head.toInt)
+    val y_end = ScaleCoordinate(input.tail.tail.tail.head.toInt)
 
     BOUNDING_BOX = new BoundingBox(x_origo, y_origo, x_end, y_end)
 
