@@ -1,4 +1,4 @@
-package Scala
+package scala
 
 class Draw {
   val allowedColours: Array[String] = Array("white", "lightGray", "gray", "darkGray", "black", "red", "pink", "orange", "yellow", "green", "magenta", "cyan", "blue");
@@ -34,11 +34,11 @@ class Draw {
     case "BOUNDING-BOX" => DrawBounding(tail, output)
     case "DRAW" => {
       if (!allowedColours.contains(tail.head)) throw new ColourException("Colour Not Allowed");
-      else DrawColourObjects(tail.tail, output, tail.head)
+      else DrawColourObjects(tail.tail, output, tail.head);
     }
     case "FILL" => {
       if (!allowedColours.contains(tail.head)) throw new ColourException("Colour Not Allowed");
-      else DrawFill(tail, output, tail.head)
+      else DrawFill(tail, output, tail.head);
     }
     case _ => println("String completed"); println("output size: " + output.length); output.foreach(arr => arr.foreach(str => println(str + " "))); return output;
   }

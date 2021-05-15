@@ -1,7 +1,5 @@
-import Scala.Draw;
-import Scala.alex_playground;
-import Scala.test;
-import UI.App;
+import scala.Draw;
+import ui.App;
 import javafx.application.Application;
 import javafx.stage.Stage;
 

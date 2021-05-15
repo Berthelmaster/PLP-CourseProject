@@ -1,4 +1,4 @@
-package Scala
+package scala
 
 class test {
 

@@ -1,4 +1,4 @@
-package Scala;
+package scala;
 
 public class ColourException extends Exception {
     public ColourException(String message) {

@@ -1,4 +1,4 @@
-package Scala
+package scala
 
 class alex_playground {
   // not used
