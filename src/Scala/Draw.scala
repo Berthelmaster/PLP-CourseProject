@@ -11,10 +11,11 @@ class Draw {
   val SCALING = 16
   val SCALING_OFFSET = SCALING * 5
   var BOUNDING_BOX = new BoundingBox(0, 0, 0, 0)
+  var BOUNDING_SET = false
 
   def DrawShape(input: String): Array[Array[String]] = {
-    //val inputNew = input + " " + END_SIGN;
-    val inputNew = this.testInputLine + " " + END_SIGN;
+    val inputNew = input + " " + END_SIGN;
+    //val inputNew = this.testInputLine + " " + END_SIGN;
     val arguments = FilterInput(inputNew) //use inputNew here
     val head = arguments.head
     val tail = arguments.tail
@@ -147,7 +148,7 @@ class Draw {
     }
   }
 
-  def DrawRectangle(input: Array[String], output: Array[Array[String]], colour: String = DEFAULT_COLOUR_BLACK): Array[Array[String]] = {
+  def DrawRectangle(input: Array[String], output: Array[Array[String]], bounding: Boolean = false, colour: String = DEFAULT_COLOUR_BLACK): Array[Array[String]] = {
     println("RECTANGLE matched");
     println("(" + input.head + ", " + input.tail.head + ")");
     println("(" + input.tail.tail.head + ", " + input.tail.tail.tail.head + ")");
@@ -164,6 +165,9 @@ class Draw {
     val rightLineAdded = BresenhamsAlgorithm(x1, y1-1, x1, y0, topLineAdded);
     val bottomLineAdded = BresenhamsAlgorithm(x1-1, y0, x0+1, y0, rightLineAdded);
 
+    if (bounding) {
+      return output :+ bottomLineAdded;
+    }
     AddShapeAndDecideNextDrawMethod(nextCommand, bottomLineAdded, output, colour)
   }
 
@@ -171,7 +175,7 @@ class Draw {
     if (colour != DEFAULT_COLOUR_BLACK | input.head == DRAW_END_SIGN) {
       return DrawColourObjects(input, output :+ newShape, colour)
     } else {
-      return DrawFromString(input.head, input.tail, output:+ newShape)
+      return DrawFromString(input.head, input.tail, output :+ newShape)
     }
   }
 
@@ -352,10 +356,14 @@ class Draw {
   }
 
   private def DrawBounding(input: Array[String], output: Array[Array[String]]): Array[Array[String]] = {
+
     val x_origo = ScaleCoordinate(input.head.toInt)
     val y_origo = ScaleCoordinate(input.tail.head.toInt)
     val x_end = ScaleCoordinate(input.tail.tail.head.toInt)
     val y_end = ScaleCoordinate(input.tail.tail.tail.head.toInt)
+
+    val newOutput = DrawRectangle(input, output, true);
+    BOUNDING_SET = true
 
     BOUNDING_BOX = new BoundingBox(x_origo, y_origo, x_end, y_end)
 
@@ -366,12 +374,12 @@ class Draw {
     "x_origo" +: inputAntiCorrected
 */
     // pre-appending to bounding-box corrected bounding-box values to draw..
-    inputAntiCorrected = DescaleBoundingValue(y_end).toString +: inputAntiCorrected
-    inputAntiCorrected = DescaleBoundingValue(x_end).toString +: inputAntiCorrected
-    inputAntiCorrected = DescaleBoundingValue(y_origo).toString +: inputAntiCorrected
-    inputAntiCorrected = DescaleBoundingValue(x_origo).toString +: inputAntiCorrected
+    //inputAntiCorrected = DescaleBoundingValue(y_end).toString +: inputAntiCorrected
+    //inputAntiCorrected = DescaleBoundingValue(x_end).toString +: inputAntiCorrected
+    //inputAntiCorrected = DescaleBoundingValue(y_origo).toString +: inputAntiCorrected
+    //inputAntiCorrected = DescaleBoundingValue(x_origo).toString +: inputAntiCorrected
 
-    return DrawRectangle(inputAntiCorrected, output)
+    return DrawFromString(input.tail.tail.tail.tail.head, input.tail.tail.tail.tail.tail, newOutput)
   }
 
   private def DescaleBoundingValue(value: Int): Int = {
@@ -382,7 +390,7 @@ class Draw {
     // output when done wiht DRAW all shapes in one string[] = ["red", 1, 2, 1, 2, 1, 2, 1, 2, 1, 2] <- containing two shapes
 
     case "LINE" => DrawLine(input.tail, output, colour)
-    case "RECTANGLE" => DrawRectangle(input.tail, output, colour)
+    case "RECTANGLE" => DrawRectangle(input.tail, output)
     //case "CIRCLE" => DrawCircle(tail, output)
     case "TEXT-AT" => DrawColoredText(input.tail, output, colour)
     case DRAW_END_SIGN => println("DRAW completed completed"); DrawFromString(input.tail.head, input.tail.tail, output);
@@ -432,14 +440,19 @@ class Draw {
   def AddPixel(x: Int, y: Int, output: Array[String]): Array[String] = {
     var outputNew = output
 
-    val x_corrected = x + BOUNDING_BOX.x_origo
-    val y_corrected = y + BOUNDING_BOX.y_origo
+    if (BOUNDING_SET) {
+      val x_corrected = (x + BOUNDING_BOX.x_origo) - SCALING_OFFSET;
+      val y_corrected = (y + BOUNDING_BOX.y_origo) - SCALING_OFFSET;
 
-    if (CheckWithinBoundingBox(x_corrected, y_corrected)) {
-      outputNew = outputNew :+ x_corrected.toString
-      outputNew = outputNew :+ y_corrected.toString
-      println("(" + x_corrected + ", " + y_corrected + ")");
-    } // 4 checks?
+      if (CheckWithinBoundingBox(x_corrected, y_corrected)) {
+        outputNew = outputNew :+ x_corrected.toString;
+        outputNew = outputNew :+ y_corrected.toString;
+        println("(" + x_corrected + ", " + y_corrected + ")");
+      } // 4 checks?
+    } else {
+      outputNew = outputNew :+ x.toString
+      outputNew = outputNew :+ y.toString
+    }
     return outputNew
   }
 
