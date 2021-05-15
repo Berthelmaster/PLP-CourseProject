@@ -3,7 +3,7 @@ package Scala
 class Draw {
   class BoundingBox(var x_origo: Int, var y_origo: Int, var x_end: Int, var y_end: Int)
 
-  val testInputLine = "(LINE (100 100) (300 100)) (DRAW red (RECTANGLE (100 100) (300 300)) (RECTANGLE (100 100) (200 200)) (RECTANGLE (100 100) (400 400))) (LINE (100 100) (300 100))"
+  val testInputLine = "(LINE (10 10) (30 10)) (DRAW red (RECTANGLE (10 10) (30 30)) (RECTANGLE (10 10) (20 20)) (RECTANGLE (10 10) (40 40))) (LINE (10 10) (30 10))"
   val END_SIGN = "END"
   val DRAW_END_SIGN = "DRAW_END"
   val DEFAULT_COLOUR_BLACK = "black"
@@ -13,8 +13,8 @@ class Draw {
   var BOUNDING_BOX = new BoundingBox(0, 0, 0, 0)
 
   def DrawShape(input: String): Array[Array[String]] = {
-    val inputNew = input + " " + END_SIGN;
-    val testInputLine = this.testInputLine + " " + END_SIGN;
+    //val inputNew = input + " " + END_SIGN;
+    val inputNew = this.testInputLine + " " + END_SIGN;
     val arguments = FilterInput(inputNew) //use inputNew here
     val head = arguments.head
     val tail = arguments.tail
@@ -304,13 +304,13 @@ class Draw {
     val y = ScaleCoordinate(input.tail.head.toInt)
 
     val textBeginning = Array(x.toString, y.toString, input.tail.tail.head);
-    var textOutput = Array.empty[String]
-    //val textBeginning = Array(x, y, input.tail.tail.head);
+    //var textOutput = Array.empty[String]
     val textAndNext = DrawTextImpl(input.tail.tail.tail, textBeginning);
 
     var outputNew = output
     if (CheckWithinBoundingBox(x, y)) {
-      outputNew :+ (textOutput = Array("black") ++ textAndNext.head);
+      //outputNew :+ (textOutput = Array("black") ++ textAndNext.head);
+      outputNew :+ Array("black") ++ textAndNext.head;
     }
 
     val nextCommand = textAndNext.tail.head;
