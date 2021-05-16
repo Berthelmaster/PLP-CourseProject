@@ -4,7 +4,7 @@ class Draw {
   class BoundingBox(var x_origo: Int, var y_origo: Int, var x_end: Int, var y_end: Int, var active: Boolean)
 
   val allowedColours: Array[String] = Array("white", "lightGray", "gray", "darkGray", "black", "red", "pink", "orange", "yellow", "green", "magenta", "cyan", "blue");
-  val testInputLine = "(BOUNDING-BOX (1 1) (50 50)) (LINE (10 10) (30 10)) (DRAW red (RECTANGLE (10 10) (30 30)) (RECTANGLE (10 10) (20 20)) (RECTANGLE (10 10) (40 40))) (LINE (10 10) (30 10))"
+  val testInputLine = "(BOUNDING-BOX (1 1) (50 50)) (LINE (10 10) (30 10)) (DRAW red (RECTANGLE (10 10) (30 30)) (RECTANGLE (10 10) (20 20)) (RECTANGLE (10 10) (40 40))) (LINE (10 10) (30 10)) (TEXT-AT (10 10) fucking lorte tekst)"
   val END_SIGN = "END"
   val DRAW_END_SIGN = "DRAW_END"
   val DEFAULT_COLOUR_BLACK = "black"
@@ -96,10 +96,6 @@ class Draw {
   }
 
   def BresenhamLineLowRecursive(x0: Int, y0: Int, x1: Int, y1: Int, dx: Int, dy: Int, D: Int, yi: Int, output: Array[String]): Array[String] = {
-    /*var outputNew = output;
-    outputNew = outputNew :+ x0.toString;
-    outputNew = outputNew :+ y0.toString;
-    println("(" + x0 + ", " + y0 + ")");*/
     var outputNew = AddPixel(x0, y0, output)
 
     if (x0 < x1) { // might need to be <=
@@ -231,69 +227,21 @@ class Draw {
     }
 
     outputNew = AddPixel((r_val + x_center), (val_y_temp+y_center), outputNew)
-    //outputNew = outputNew :+ (r_val + x_center).toString
-    //outputNew = outputNew :+ (val_y_temp+y_center).toString
     outputNew = AddPixel((-r_val + x_center), (val_y_temp + y_center), outputNew)
-    //outputNew = outputNew :+ (-r_val + x_center).toString
-    //outputNew = outputNew :+ (val_y_temp + y_center).toString
     outputNew = AddPixel((r_val + x_center), (-val_y_temp + y_center), outputNew)
-    //outputNew = outputNew :+ (r_val + x_center).toString
-    //outputNew = outputNew :+ (-val_y_temp + y_center).toString
     outputNew = AddPixel((-r_val + x_center), (-val_y_temp + y_center), outputNew)
-    //outputNew = outputNew :+ (-r_val + x_center).toString
-    //outputNew = outputNew :+ (-val_y_temp + y_center).toString
-
-/*
-    println("(" + (r_val + x_center) + ", " + (val_y_temp+y_center) + ")")
-    println("(" + (-r_val + x_center)
-      + ", " + (val_y_temp + y_center) + ")")
-    println("(" + (r_val + x_center) +
-      ", " + (-val_y_temp + y_center) + ")")
-    println("(" + (-r_val + x_center)
-      + ", " + (-val_y_temp + y_center) + ")")
-
- */
 
     println("BREAK")
 
     if(r_val != val_y_temp){
       outputNew = AddPixel((val_y_temp + x_center), (r_val + y_center), outputNew)
-      //outputNew = outputNew :+ (val_y_temp + x_center).toString
-      //outputNew = outputNew :+ (r_val + y_center).toString
       outputNew = AddPixel((-val_y_temp + x_center), (r_val + y_center), outputNew)
-      //outputNew = outputNew :+ (-val_y_temp + x_center).toString
-      //outputNew = outputNew :+ (r_val + y_center).toString
       outputNew = AddPixel((val_y_temp + x_center), (-r_val + y_center), outputNew)
-      //outputNew = outputNew :+ (val_y_temp + x_center).toString
-      //outputNew = outputNew :+ (-r_val + y_center).toString
       outputNew = AddPixel((-val_y_temp + x_center), (-r_val + y_center), outputNew)
-      //outputNew = outputNew :+ (-val_y_temp + x_center).toString
-      //outputNew = outputNew :+ (-r_val + y_center).toString
-
-      /*
-      println("(" + (val_y_temp + x_center)
-        + ", " + (r_val + y_center) + ")")
-      println("(" + (-val_y_temp + x_center)
-        + ", " + (r_val + y_center) + ")")
-      println("(" + (val_y_temp + x_center)
-        + ", " + (-r_val + y_center) + ")")
-      println("(" + (-val_y_temp + x_center)
-        + ", " + (-r_val + y_center) +")")
-
-       */
     }
 
 
     MidPointCircleAlgorithm(x_center, y_center, r_val,val_y_temp, p_new, outputNew)
-    //val outputNew = output :+ p_new.toString
-    /*
-    if(r_val > val_y_temp) {
-      MidPointCircleAlgorithm(x_center, y_center, r_val,val_y_temp, p_new, outputNew)
-    }
-    else { // if (x != y), otherwise there might be no return, resulting in return type being Unit
-      outputNew
-    }
-     */
   }
 
   private def DrawText(input: Array[String], output: Array[Array[String]]): Array[Array[String]] = {
@@ -301,15 +249,9 @@ class Draw {
     val x = ScaleCoordinate(input.head.toInt)
     val y = ScaleCoordinate(input.tail.head.toInt)
 
-    val textBeginning = Array(x.toString, y.toString, input.tail.tail.head);
-    //var textOutput = Array.empty[String]
+    val textBeginning = AddPixel(x, y, Array("black")) :+ input.tail.tail.head;
     val textAndNext = DrawTextImpl(input.tail.tail.tail, textBeginning);
-
-    var outputNew = output
-    if (CheckWithinBoundingBox(x, y)) {
-      //outputNew :+ (textOutput = Array("black") ++ textAndNext.head);
-      outputNew :+ Array("black") ++ textAndNext.head;
-    }
+    val outputNew = output :+ textAndNext.head;
 
     val nextCommand = textAndNext.tail.head;
     return DrawFromString(nextCommand.head, nextCommand.tail, outputNew);
@@ -320,20 +262,15 @@ class Draw {
     val x = ScaleCoordinate(input.head.toInt)
     val y = ScaleCoordinate(input.tail.head.toInt)
 
-    val textBeginning = Array(x.toString, y.toString, input.tail.tail.head);
+    val textBeginning = AddPixel(x, y, Array(colour)) :+ input.tail.tail.head;
     val textAndNext = DrawTextImpl(input.tail.tail.tail, textBeginning);
-//    val textOutput = Array(colour) ++ textAndNext.head;
-
-    var outputNew = output
-    if (CheckWithinBoundingBox(x, y)) {
-      outputNew :+  Array(colour) ++ textAndNext.head;
-    }
+    val outputNew = output :+ textAndNext.head;
 
     val nextCommand = textAndNext.tail.head;
     if (nextCommand.head.equals(DRAW_END_SIGN)) {
       return DrawFromString(nextCommand.head, nextCommand.tail, outputNew);
     } else {
-      return DrawColourObjects(nextCommand, output :+ textOutput, colour)
+      return DrawColourObjects(nextCommand, outputNew, colour)
     }
   }
 
@@ -344,7 +281,7 @@ class Draw {
     if (terminationStrings.contains(input.head)) {
       return Array(output, input);
     } else {
-      output(2) = output(2).concat(" " + input.head);
+      output(3) = output(3).concat(" " + input.head);
       return DrawTextImpl(input.tail, output);
     }
   }
@@ -361,16 +298,6 @@ class Draw {
     BOUNDING_BOX = new BoundingBox(x_origo, y_origo, x_end, y_end, active = true)
 
     var inputAntiCorrected = input.tail.tail.tail.tail
-    /*"y_end" +: inputAntiCorrected
-    "x_end" +: inputAntiCorrected
-    "y_origo" +: inputAntiCorrected
-    "x_origo" +: inputAntiCorrected
-*/
-    // pre-appending to bounding-box corrected bounding-box values to draw..
-    //inputAntiCorrected = DescaleBoundingValue(y_end).toString +: inputAntiCorrected
-    //inputAntiCorrected = DescaleBoundingValue(x_end).toString +: inputAntiCorrected
-    //inputAntiCorrected = DescaleBoundingValue(y_origo).toString +: inputAntiCorrected
-    //inputAntiCorrected = DescaleBoundingValue(x_origo).toString +: inputAntiCorrected
 
     return DrawFromString(input.tail.tail.tail.tail.head, input.tail.tail.tail.tail.tail, newOutput)
   }
@@ -456,12 +383,10 @@ class Draw {
     }
   }
 
-  private def FillCircle(input: Array[String], output: Array[Array[String]]) : Array[Array[String]] = {
-  //private def FillCircle(input: Array[String], output: Array[Array[String]], colour: String) : Array[Array[String]] = {
+  private def FillCircle(input: Array[String], output: Array[Array[String]], colour: String) : Array[Array[String]] = {
 
     println("FillCircle Started")
 
-    val colour = input.head;
     val x1 = ScaleCoordinate(input.tail.tail.head.toInt)
     val y1 = ScaleCoordinate(input.tail.tail.tail.head.toInt)
     val r = ScaleRadius(input.tail.tail.tail.tail.head.toInt)
@@ -493,7 +418,7 @@ class Draw {
     outputNew = outputNew ++ initialCircle
     outputNew = outputNew ++ area
 
-    println("COmplete CIRCLE")
+    println("Complete CIRCLE")
     println(outputNew.mkString(","))
     println(outputNew.length)
 
