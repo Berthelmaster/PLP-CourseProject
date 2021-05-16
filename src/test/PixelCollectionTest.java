@@ -1,7 +1,7 @@
 package test;
 
-import UI.Pixel;
-import UI.PixelCollection;
+import ui.Pixel;
+import ui.PixelCollection;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
