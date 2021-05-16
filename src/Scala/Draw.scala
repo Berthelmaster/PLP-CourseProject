@@ -192,19 +192,11 @@ class Draw {
     // Initial Point
 
     CircleArray = AddPixel((r + x_center), (y_center), CircleArray)
-    //CircleArray :+ (r + x_center).toString;
-    //CircleArray :+ (y_center).toString;
 
     if(r > 0){
       CircleArray = AddPixel((r + x_center), (-0 + y_center), CircleArray)
-      //CircleArray :+ (r + x_center).toString
-      //CircleArray :+ (-0 + y_center).toString
       CircleArray = AddPixel((0 + x_center), (r + y_center), CircleArray)
-      //CircleArray :+ (0 + x_center).toString
-      //CircleArray :+ (r + y_center).toString
       CircleArray = AddPixel((-0 + x_center), (r + y_center), CircleArray)
-      //CircleArray :+ (-0 + x_center).toString
-      //CircleArray :+ (r + y_center).toString
     }
 
 
