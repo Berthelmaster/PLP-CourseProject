@@ -56,7 +56,7 @@ public class App extends JFrame{
         });
     }
 
-    private ArrayList<PixelCollection> calculateDrawing(String input) throws Exception{
+    private ArrayList<PixelCollection> calculateDrawing(String input) throws Exception {
         ArrayList<PixelCollection> drawings = new ArrayList<>();
         String[][] drawingEngineOutput = scaleDrawingEngine.DrawShape( input.isEmpty() ? "(LINE (5 5) (10 10))" : input );
         for (String[] strings : drawingEngineOutput) {

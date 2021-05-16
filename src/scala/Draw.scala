@@ -25,6 +25,7 @@ class Draw {
     println("DrawShape")
     // Figure out what class to call
     val outputArrayOfStringArrays = Array.empty[Array[String]];
+    if (input.nonEmpty && (!BOUNDING_BOX.active && !head.equals("BOUNDING-BOX"))) throw new NoBoundingBoxException("No Bounding box defined");
     val output = DrawFromString(head, tail, outputArrayOfStringArrays);
     return HighlightLastObject(output);
   }
