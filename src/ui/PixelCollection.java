@@ -12,7 +12,7 @@ public class PixelCollection {
         pixels = new ArrayList<>();
     }
 
-    PixelCollection(String[] stringArray) throws NoSuchFieldException, IllegalAccessException {
+    public PixelCollection(String[] stringArray) throws NoSuchFieldException, IllegalAccessException {
         color = (Color) Color.class.getField(stringArray[0]).get(null);
         pixels = new ArrayList<>();
         if (stringArray.length == 4) {
