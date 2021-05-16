@@ -1,4 +1,4 @@
-package Scala
+package scala
 
 class Draw {
   class BoundingBox(var x_origo: Int, var y_origo: Int, var x_end: Int, var y_end: Int, var active: Boolean)

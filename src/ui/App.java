@@ -1,6 +1,6 @@
-package UI;
+package ui;
 
-import Scala.Draw;
+import scala.Draw;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;

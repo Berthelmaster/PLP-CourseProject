@@ -1,8 +1,7 @@
-package UI;
+package ui;
 
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.List;
 
 public class PixelCollection {
     private Color color;

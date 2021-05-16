@@ -1,6 +1,4 @@
-package UI;
-
-import java.util.ArrayList;
+package ui;
 
 public class TextPixel extends Pixel{
     private String text;
