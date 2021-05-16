@@ -176,7 +176,7 @@ class Draw {
     }
   }
 
-  private def DrawCircle(arr: Array[String], output: Array[Array[String]]): Array[Array[String]] = {
+  private def DrawCircle(arr: Array[String], output: Array[Array[String]], colour: String = DEFAULT_COLOUR_BLACK): Array[Array[String]] = {
     // Mid-Point Circle Drawing Algorithm - https://www.geeksforgeeks.org/mid-point-circle-drawing-algorithm
     val x_center = ScaleCoordinate(arr.head.toInt)
     val y_center = ScaleCoordinate(arr.tail.head.toInt)
@@ -186,8 +186,8 @@ class Draw {
     val nextCommand = arr.tail.tail.tail;
     //println("Printing next command:" + nextCommand.toString)
 
-    val colour = "black";
-    var CircleArray = Array(colour);
+    val circleColor = colour
+    var CircleArray = Array(circleColor);
 
     // Initial Point
 
@@ -387,7 +387,7 @@ class Draw {
 
     case "LINE" => DrawLine(input.tail, output, colour)
     case "RECTANGLE" => DrawRectangle(input.tail, output)
-    //case "CIRCLE" => DrawCircle(tail, output)
+    case "CIRCLE" => DrawCircle(input.tail, output, colour)
     case "TEXT-AT" => DrawColoredText(input.tail, output, colour)
     case DRAW_END_SIGN => println("DRAW completed completed"); DrawFromString(input.tail.head, input.tail.tail, output);
     case _ => println("DRAW error"); return  output
