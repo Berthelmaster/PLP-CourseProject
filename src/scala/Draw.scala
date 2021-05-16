@@ -296,15 +296,10 @@ class Draw {
 
     val newOutput = DrawRectangle(input, output, forBoundingBox = true);
 
+
     BOUNDING_BOX = new BoundingBox(x_origo, y_origo, x_end, y_end, active = true)
 
-    var inputAntiCorrected = input.tail.tail.tail.tail
-
     return DrawFromString(input.tail.tail.tail.tail.head, input.tail.tail.tail.tail.tail, newOutput)
-  }
-
-  private def DescaleBoundingValue(value: Int): Int = {
-    (value - SCALING_OFFSET) / SCALING;
   }
 
   private def DrawColourObjects(input: Array[String], output: Array[Array[String]], colour: String): Array[Array[String]] = input.head match {
