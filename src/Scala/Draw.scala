@@ -1,7 +1,7 @@
 package Scala
 
 class Draw {
-  class BoundingBox(var x_origo: Int, var y_origo: Int, var x_end: Int, var y_end: Int)
+  class BoundingBox(var x_origo: Int, var y_origo: Int, var x_end: Int, var y_end: Int, var active: Boolean)
 
   val testInputLine = "(BOUNDING-BOX (1 1) (50 50))"// (LINE (10 10) (30 10)) (DRAW red (RECTANGLE (10 10) (30 30)) (RECTANGLE (10 10) (20 20)) (RECTANGLE (10 10) (40 40))) (LINE (10 10) (30 10))"
   val END_SIGN = "END"
@@ -10,8 +10,7 @@ class Draw {
   var highlightedObject: Array[String] = Array.empty
   val SCALING = 16
   val SCALING_OFFSET = SCALING * 5
-  var BOUNDING_BOX = new BoundingBox(0, 0, 0, 0)
-  var BOUNDING_SET = false
+  var BOUNDING_BOX = new BoundingBox(0, 0, 0, 0, false)
 
   def DrawShape(input: String): Array[Array[String]] = {
     val inputNew = input + " " + END_SIGN;
@@ -148,7 +147,7 @@ class Draw {
     }
   }
 
-  def DrawRectangle(input: Array[String], output: Array[Array[String]], bounding: Boolean = false, colour: String = DEFAULT_COLOUR_BLACK): Array[Array[String]] = {
+  def DrawRectangle(input: Array[String], output: Array[Array[String]], forBoundingBox: Boolean = false, colour: String = DEFAULT_COLOUR_BLACK): Array[Array[String]] = {
     println("RECTANGLE matched");
     println("(" + input.head + ", " + input.tail.head + ")");
     println("(" + input.tail.tail.head + ", " + input.tail.tail.tail.head + ")");
@@ -165,9 +164,7 @@ class Draw {
     val rightLineAdded = BresenhamsAlgorithm(x1, y1-1, x1, y0, topLineAdded);
     val bottomLineAdded = BresenhamsAlgorithm(x1-1, y0, x0+1, y0, rightLineAdded);
 
-    if (bounding) {
-      return output :+ bottomLineAdded;
-    }
+    if (forBoundingBox) { return output :+ bottomLineAdded; }
     AddShapeAndDecideNextDrawMethod(nextCommand, bottomLineAdded, output, colour)
   }
 
@@ -362,10 +359,9 @@ class Draw {
     val x_end = ScaleCoordinate(input.tail.tail.head.toInt)
     val y_end = ScaleCoordinate(input.tail.tail.tail.head.toInt)
 
-    val newOutput = DrawRectangle(input, output, true);
-    BOUNDING_SET = true
+    val newOutput = DrawRectangle(input, output, forBoundingBox = true);
 
-    BOUNDING_BOX = new BoundingBox(x_origo, y_origo, x_end, y_end)
+    BOUNDING_BOX = new BoundingBox(x_origo, y_origo, x_end, y_end, active = true)
 
     var inputAntiCorrected = input.tail.tail.tail.tail
     /*"y_end" +: inputAntiCorrected
@@ -440,7 +436,7 @@ class Draw {
   def AddPixel(x: Int, y: Int, output: Array[String]): Array[String] = {
     var outputNew = output
 
-    if (BOUNDING_SET) {
+    if (BOUNDING_BOX.active) {
       val x_corrected = (x + BOUNDING_BOX.x_origo) - SCALING_OFFSET;
       val y_corrected = (y + BOUNDING_BOX.y_origo) - SCALING_OFFSET;
 
