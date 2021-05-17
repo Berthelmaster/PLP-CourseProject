@@ -443,9 +443,25 @@ class Draw {
 
 
   def FilterInput(input: String): Array[String] = {
-    val input_string = input.replace(")))", " " + DRAW_END_SIGN + " ")
+    val input_string = IncaseDrawImpl(input, "");
     val input_array = input_string.split(Array('(', ')', ' '))
     input_array.filter(_.nonEmpty)
+  }
+
+  def IncaseDrawImpl(input: String, output: String, brackets: Int = 0): String = {
+    if (input.isEmpty) {
+      return output;
+    } else if (input.slice(0, 5).contains("(DRAW")) {
+      return IncaseDrawImpl(input.tail, output :+ input.head, 1);
+    } else if (input.head == '(' && brackets > 0) {
+      return IncaseDrawImpl(input.tail, output :+ input.head, brackets + 1);
+    } else if (input.head == ')' && brackets > 0) {
+      val bracketsAfter = brackets - 1;
+      if (bracketsAfter == 0) return IncaseDrawImpl(input.tail, (output :+ input.head).appendedAll(DRAW_END_SIGN), bracketsAfter);
+      else return IncaseDrawImpl(input.tail, output :+ input.head, bracketsAfter);
+    } else {
+      return IncaseDrawImpl(input.tail, output :+ input.head, brackets);
+    }
   }
 
   private def HighlightLastObject(output: Array[Array[String]]): Array[Array[String]] = {
