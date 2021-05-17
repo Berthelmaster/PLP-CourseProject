@@ -201,7 +201,6 @@ class Draw {
       CircleArray = AddPixel((-0 + x_center), (r + y_center), CircleArray)
     }
 
-
     val out = MidPointCircleAlgorithm(x_center,y_center,r,0,P,CircleArray)
 
     CircleArray = out
@@ -332,7 +331,7 @@ class Draw {
 
     val shape = FillRectangleImpl(x1, x1, y1, x2, y2, shapeStart)
 
-    return DrawFromString(nextCommand.head, nextCommand.tail, output:+ shape) // only one shape is filled at a time
+    return DrawFromString(nextCommand.tail.head, nextCommand.tail.tail, output:+ shape) // only one shape is filled at a time
   }
 
   private def FillRectangleImpl(x1_origin: Int, x: Int, y: Int, x2: Int, y2: Int, output: Array[String]): Array[String] = {
@@ -397,6 +396,8 @@ class Draw {
     var initialCircle = Array[String]()
     initialCircle = initialCircle :+ (r + x1).toString;
     initialCircle = initialCircle :+ (y1).toString;
+    var withHorizontalMId = BresenhamsAlgorithm(x1-r, y1, x1+r, y1, initialCircle)
+    var withVerticalMId = BresenhamsAlgorithm(x1, y1-r, x1, y1+r, withHorizontalMId)
 
     if(r > 0){
       initialCircle = initialCircle :+ (r + x1).toString
@@ -411,7 +412,7 @@ class Draw {
 
     var outputNew = Array(colour)
 
-    outputNew = outputNew ++ initialCircle
+    outputNew = outputNew ++ withVerticalMId
     outputNew = outputNew ++ area
 
     println("Complete CIRCLE")
