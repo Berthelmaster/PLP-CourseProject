@@ -331,7 +331,7 @@ class Draw {
 
     val shape = FillRectangleImpl(x1, x1, y1, x2, y2, shapeStart)
 
-    return DrawFromString(nextCommand.tail.head, nextCommand.tail.tail, output:+ shape) // only one shape is filled at a time
+    return DrawFromString(nextCommand.head, nextCommand.tail, output:+ shape) // only one shape is filled at a time
   }
 
   private def FillRectangleImpl(x1_origin: Int, x: Int, y: Int, x2: Int, y2: Int, output: Array[String]): Array[String] = {
