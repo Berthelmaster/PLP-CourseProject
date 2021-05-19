@@ -65,7 +65,7 @@ public class Canvas extends JPanel {
         pixels.forEach(pixelCollection -> {
             g.setColor(pixelCollection.getColor());
             pixelCollection.getPixels().forEach(pixel -> {
-                if (pixel.getClass() == TextPixel.class) {
+                if (pixel instanceof TextPixel) {
                     g.drawString(((TextPixel) pixel).getText(), pixel.get_x(), getHeight()-pixel.get_y());
                 } else {
                     g.drawLine(pixel.get_x(), getHeight()-pixel.get_y(), pixel.get_x(), getHeight()-pixel.get_y());

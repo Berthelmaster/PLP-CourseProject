@@ -204,8 +204,8 @@ class Draw {
     val out = MidPointCircleAlgorithm(x_center,y_center,r,0,P,CircleArray)
 
     CircleArray = out
-
-    DrawFromString(nextCommand.head, nextCommand.tail, output:+ CircleArray)
+    AddShapeAndDecideNextDrawMethod(nextCommand, CircleArray, output, colour);
+    //DrawFromString(nextCommand.head, nextCommand.tail, output:+ CircleArray)
   }
 
   private def MidPointCircleAlgorithm(x_center: Int, y_center: Int, r: Int, y_temp: Int, P: Int, output: Array[String]): Array[String] = {
